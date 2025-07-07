@@ -1,15 +1,32 @@
 {
-  "name": "nodejs",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.842.0",
+    "aws-sdk": "^2.1692.0",
+    "axios": "^1.10.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
+    "connect-sqlite3": "^0.9.16",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "express-mysql-session": "^3.0.3",
+    "express-session": "^1.18.1",
+    "mysql2": "^3.14.1",
+    "node-cron": "^4.2.0",
+    "openai": "^5.8.2",
+    "sqlite3": "^5.1.7",
+    "uuid": "^11.1.0"
+  },
+  "name": "story",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@types/node": "^22.13.11"
-  }
+  "description": ""
 }
