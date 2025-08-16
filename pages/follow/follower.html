@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Followers - Story Weaver</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* Custom CSS variables for theme consistency - Keep consistent with user profile */
+        :root {
+            --primary-color: #008080; /* Teal */
+            --secondary-color: #FFA500; /* Orange */
+            --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+            --text-color-dark: #ccc; /* Light grey for text on black sections */
+            --button-bg: rgba(255, 255, 255, 0.1);
+            --button-border: rgba(255, 255, 255, 0.2);
+            --button-hover-bg: rgba(255, 165, 0, 0.3);
+            --button-hover-border: rgba(255, 165, 0, 0.5);
+            --transition-speed: 0.3s;
+            --border-radius-medium: 0.75rem;
+            --card-shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.5);
+            --section-bg-dark: rgba(0, 0, 0, 0.8);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #000;
+            color: var(--text-color-light);
+            text-align: center;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--secondary-color);
+            letter-spacing: 1px;
+        }
+
+        /* Header - Keep consistent with user profile */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color-light);
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1001;
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        header .logo {
+            font-family: 'Bebas Neue', sans-serif; /* Explicitly set for logo */
+            font-size: 2rem;
+            font-weight: 800; /* Matches about.html's implied boldness */
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+            flex-grow: 1; /* Allows logo to take available space */
+            text-align: center; /* Center the logo text */
+        }
+
+        header .logo:hover {
+            color: var(--primary-color);
+        }
+
+        .header-spacer {
+            height: 100px;
+            width: 100%;
+        }
+
+        /* Main Content Container */
+        .content-container {
+            background-color: var(--section-bg-dark);
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            padding: 3rem 2rem;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+            max-width: 900px;
+            width: 90%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* User List Grid - Adjusted for smaller cards */
+        .user-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Allow more users per row */
+            gap: 1rem; /* Smaller gap */
+            width: 100%;
+            justify-content: center;
+        }
+
+        .user-card {
+            background-color: #111;
+            border-radius: var(--border-radius-medium);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            padding: 0.75rem 1rem; /* Reduced padding for smaller box */
+            display: flex;
+            align-items: center; /* Align items horizontally */
+            text-decoration: none;
+            color: var(--text-color-light);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            text-align: left; /* Align text to the left within the card */
+        }
+
+        .user-card:hover {
+            transform: translateY(-3px); /* Smaller hover effect */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .user-avatar {
+            width: 50px; /* Smaller avatar */
+            height: 50px; /* Smaller avatar */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color); /* Smaller border */
+            margin-right: 1rem; /* Space between avatar and name */
+            transition: transform var(--transition-speed) ease;
+            flex-shrink: 0; /* Prevent avatar from shrinking */
+        }
+
+        .user-card:hover .user-avatar {
+            transform: scale(1.03); /* Smaller hover effect */
+        }
+
+        .user-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem; /* Smaller font size */
+            margin: 0; /* Remove default margin */
+            color: var(--secondary-color);
+            white-space: nowrap; /* Prevent name from wrapping */
+            overflow: hidden; /* Hide overflow */
+            text-overflow: ellipsis; /* Add ellipsis for long names */
+        }
+
+        /* Loading and Error message styles */
+        .loading-message, .error-message {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+        .loading-message {
+            color: var(--primary-color);
+        }
+        .error-message {
+            color: #ff4d4d;
+        }
+
+        /* Footer - Keep consistent with user profile */
+        footer {
+            width: 100%;
+            background-color: #222;
+            color: var(--text-color-dark);
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            .back-button {
+                left: 10px;
+                font-size: 1.3rem;
+            }
+            header .logo {
+                font-size: 1.8rem;
+            }
+            .content-container {
+                padding: 2.5rem 1.5rem;
+                width: 95%;
+            }
+            .content-container h2 {
+                font-size: 2rem;
+            }
+            .user-list-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust for smaller screens */
+            }
+            .user-avatar {
+                width: 45px;
+                height: 45px;
+                margin-right: 0.8rem;
+            }
+            .user-name {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0.8rem;
+            }
+            .back-button {
+                left: 5px;
+                font-size: 1.1rem;
+            }
+            header .logo {
+                font-size: 1.6rem;
+            }
+            .content-container {
+                padding: 2rem 1rem;
+            }
+            .content-container h2 {
+                font-size: 1.8rem;
+            }
+            .user-list-grid {
+                grid-template-columns: 1fr; /* Stack cards vertically on smallest screens */
+            }
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                margin-right: 0.7rem;
+            }
+            .user-name {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/pages/userpage.html" class="back-button" title="Back to Profile">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <a href="#" class="logo">REDORA</a>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <main class="content-container">
+        <h2>Followers</h2>
+        <div class="user-list-grid" id="user-list-grid">
+            <p class="loading-message" id="list-status-message">Loading followers...</p>
+            </div>
+    </main>
+
+ <footer>
+        <p>&copy; 2025 Redora. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/pages/footer/aboutdev.html">About Us</a>
+            <a href="/pages/footer/policy.html">Privacy Policy</a>
+            <a href="/pages/footer/terms.html">Terms of Service</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userListGrid = document.getElementById('user-list-grid');
+            const listStatusMessage = document.getElementById('list-status-message');
+
+            try {
+                const sessionResponse = await fetch('/api/session-status');
+                const sessionData = await sessionResponse.json();
+
+                if (!sessionResponse.ok || !sessionData.loggedIn) {
+                    listStatusMessage.textContent = 'Please log in to view your followers.';
+                    listStatusMessage.classList.add('error-message');
+                    return;
+                }
+                const currentUserId = sessionData.userId;
+
+                const response = await fetch(`/api/followers/${currentUserId}`);
+                const data = await response.json();
+
+                listStatusMessage.style.display = 'none';
+
+                if (response.ok && data.length > 0) {
+                    userListGrid.innerHTML = '';
+                    data.forEach(user => {
+                        const userCard = document.createElement('a');
+                        userCard.href = `/pages/other.html?userId=${user.id}`; // Link to other user's profile
+                        userCard.classList.add('user-card');
+
+                        // Updated HTML structure for profile picture on left, no bio
+                        userCard.innerHTML = `
+                            <img src="https://via.placeholder.com/50/ADD8E6/000000?text=User" alt="${user.fullName}'s Avatar" class="user-avatar">
+                            <h4 class="user-name">${user.fullName}</h4>
+                        `;
+                        userListGrid.appendChild(userCard);
+                    });
+                } else if (response.ok && data.length === 0) {
+                    userListGrid.innerHTML = `<p class="error-message">No followers found yet.</p>`;
+                }
+                else {
+                    userListGrid.innerHTML = `<p class="error-message">${data.message || 'Failed to load followers. Please try again.'}</p>`;
+                }
+            } catch (error) {
+                listStatusMessage.textContent = `An error occurred while loading followers: ${error.message}`;
+                listStatusMessage.classList.add('error-message');
+                console.error('Error fetching followers:', error);
+            }
+        });
+    </script>
+</body>
+</html>

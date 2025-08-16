@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story Weaver - Write Your Story</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* Custom CSS variables for theme consistency - Copied from home.html */
+        :root {
+            --primary-color: #008080; /* Teal */
+            --secondary-color: #FFA500; /* Orange */
+            --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+            --text-color-dark: #ccc; /* Light grey for text on black sections */
+            --button-bg: rgba(255, 255, 255, 0.1); /* Light transparent background for buttons */
+            --button-border: rgba(255, 255, 255, 0.2); /* Subtle border for buttons */
+            --button-hover-bg: rgba(255, 165, 0, 0.3); /* Orange transparent on hover */
+            --button-hover-border: rgba(255, 165, 0, 0.5); /* Slightly stronger orange border on hover */
+            --transition-speed: 0.3s;
+            --border-radius-medium: 0.75rem;
+            --card-shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.5);
+            --section-bg-dark: rgba(0, 0, 0, 0.8); /* Dark, slightly transparent background for sections */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #000; /* Black background */
+            color: var(--text-color-light); /* Default text color on black */
+            text-align: center;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Dark semi-transparent nav */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between; /* Adjusted to spread logo and icon */
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            position: absolute; /* Position relative to header */
+            left: 20px; /* Distance from left edge */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Adjust for perfect vertical centering */
+            color: var(--text-color-light);
+            font-size: 1.5rem; /* Icon size */
+            text-decoration: none;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1001; /* Ensure it's above other header elements if needed */
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1); /* Slight grow on hover */
+        }
+
+        header .logo {
+            font-family: 'Bebas Neue', sans-serif; /* Explicitly set for logo */
+            font-size: 2rem;
+            font-weight: 800; /* Matches about.html's implied boldness */
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+            flex-grow: 1; /* Allows logo to take available space */
+            text-align: center; /* Center the logo text */
+        }
+
+        header .logo:hover {
+            color: var(--primary-color);
+        }
+
+        /* Main content area for writing */
+        main {
+            flex-grow: 1; /* Allows main content to take up available space */
+            width: 100%;
+            max-width: 1000px; /* Max width for content, similar to home.html grid */
+            padding: 100px 20px 40px; /* Top padding for fixed header */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .writing-container {
+            background-color: var(--section-bg-dark);
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            padding: 30px;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .writing-container h2 {
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .prompt-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: var(--border-radius-medium);
+            margin-bottom: 25px;
+            font-style: italic;
+            color: var(--text-color-light);
+            line-height: 1.6;
+            font-size: 1.1rem;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .prompt-box h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+        }
+
+        #storyTitle {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius-medium);
+            border: 1px solid #333;
+            background-color: #1a1a1a;
+            color: var(--text-color-light);
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        #storyTitle:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.4);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 400px; /* Good starting height for writing */
+            padding: 20px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: var(--border-radius-medium);
+            color: var(--text-color-light);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical; /* Allow vertical resizing */
+            box-sizing: border-box;
+            margin-bottom: 15px; /* Adjusted margin to fit new button */
+            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.4);
+        }
+
+        .character-count {
+            text-align: right;
+            color: var(--text-color-dark);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        /* Container for the new "Add Image" button */
+        .image-upload-section {
+            text-align: center;
+            margin: 20px 0; /* Space it out from textarea and other buttons */
+        }
+
+        /* Styling for all common buttons/labels */
+        .action-buttons button,
+        .image-upload-section label { /* Apply similar styles to label for consistent button look */
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 1rem 1.8rem;
+            border-radius: var(--border-radius-medium);
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-family: 'Bebas Neue', sans-serif;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            color: white; /* Default text color for buttons */
+            text-decoration: none; /* For label, if it's acting as a link/button */
+        }
+
+        .action-buttons button i,
+        .image-upload-section label i {
+            font-size: 1.3rem;
+        }
+
+        .save-draft-btn {
+            background-color: #555; /* Darker grey for save */
+        }
+        .save-draft-btn:hover {
+            background-color: #777;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .publish-story-btn {
+            background-color: var(--primary-color); /* Teal for publish */
+        }
+        .publish-story-btn:hover {
+            background-color: var(--secondary-color); /* Orange on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Style for the image upload button in its new position */
+        .upload-image-btn {
+            background-color: #4CAF50; /* Green */
+        }
+        .upload-image-btn:hover {
+            background-color: #66BB6A; /* Lighter green on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Hide the actual file input */
+        #imageUpload {
+            display: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        /* Footer - Copied from home.html */
+        footer {
+            width: 100%;
+            background-color: #222;
+            color: var(--text-color-dark);
+            padding: 2rem;
+            font-family: 'Bebas Neue', sans-serif; /* Changed font to Bebas Neue */
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Overlay for buffering/success message */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Darker overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000; /* Above all other content */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease-in-out, visibility var(--transition-speed) ease-in-out;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .overlay-content {
+            text-align: center;
+            color: var(--primary-color);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            .back-button {
+                left: 10px; /* Adjust position for smaller screens */
+                font-size: 1.3rem;
+            }
+            header .logo {
+                font-size: 1.8rem;
+            }
+            
+            main {
+                padding: 90px 15px 30px;
+            }
+            .writing-container {
+                padding: 20px;
+            }
+            .writing-container h2 {
+                font-size: 2rem;
+            }
+            .prompt-box {
+                padding: 15px;
+                font-size: 1rem;
+            }
+            .prompt-box h4 {
+                font-size: 1.3rem;
+            }
+            #storyTitle {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            textarea {
+                min-height: 300px;
+                padding: 15px;
+            }
+            /* Adjust button/label styles for smaller screens */
+            .action-buttons button,
+            .image-upload-section label {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+            .action-buttons button i,
+            .image-upload-section label i {
+                font-size: 1.1rem;
+            }
+
+            .overlay-content {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0.8rem;
+            }
+            .back-button {
+                left: 5px;
+                font-size: 1.1rem;
+            }
+            header .logo {
+                font-size: 1.6rem;
+            }
+            
+            main {
+                padding: 80px 10px 20px;
+            }
+            .writing-container {
+                padding: 15px;
+            }
+            .writing-container h2 {
+                font-size: 1.8rem;
+            }
+            .prompt-box {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .prompt-box h4 {
+                font-size: 1.1rem;
+            }
+            #storyTitle {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            textarea {
+                min-height: 250px;
+                padding: 10px;
+            }
+            .action-buttons {
+                flex-direction: column; /* Stack buttons vertically */
+                align-items: stretch;
+            }
+            /* Further adjust button/label styles for very small screens */
+            .action-buttons button,
+            .image-upload-section label {
+                font-size: 0.95rem;
+                padding: 0.7rem 1.2rem;
+            }
+
+            .overlay-content {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/home.html" class="back-button" title="Back to Home">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+       <a href="#" class="logo">REDORA</a>
+    </header>
+
+    <main>
+        <div class="writing-container">
+            <h2>Craft Your Narrative</h2>
+
+            <div class="prompt-box">
+                <h4>This Month's Spark:</h4>
+                <p id="currentStoryPromptText">Loading story prompt...</p>
+            </div>
+
+            <input type="text" id="storyTitle" placeholder="Give your story a captivating title!">
+            
+            <textarea id="storyTextarea" placeholder="Complete the story......"></textarea>
+            
+            <div class="image-upload-section">
+                <label for="imageUpload" class="upload-image-btn">
+                    <i class="fas fa-plus"></i> Add Image
+                </label>
+                <input type="file" id="imageUpload" accept="image/*">
+                <p id="imageFileName" style="font-size: 0.9em; color: var(--text-color-dark); margin-top: 5px;"></p>
+                <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; max-height: 200px; display: none; margin-top: 10px; border-radius: var(--border-radius-medium);" onerror="this.style.display='none'; this.src='#';">
+            </div>
+
+            <div class="character-count">Characters: <span id="charCount">0</span></div>
+
+            <div class="action-buttons">
+                <button class="save-draft-btn" id="saveDraftButton">
+                    <i class="fas fa-save"></i> Save Draft
+                </button>
+                <button class="publish-story-btn" id="publishStoryButton">
+                    <i class="fas fa-paper-plane"></i> Publish Story
+                </button>
+            </div>
+        </div>
+    </main>
+
+ <footer>
+        <p>&copy; 2025 Redora. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/pages/footer/aboutdev.html">About Us</a>
+            <a href="/pages/footer/policy.html">Privacy Policy</a>
+            <a href="/pages/footer/terms.html">Terms of Service</a>
+        </div>
+    </footer>
+
+    <div id="processingOverlay" class="overlay">
+        <div class="overlay-content">Processing your story...</div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Elements for the dynamic story prompt and writing area
+            const currentStoryPromptTextElement = document.getElementById('currentStoryPromptText');
+            const storyTitleInput = document.getElementById('storyTitle');
+            const storyTextarea = document.getElementById('storyTextarea');
+            const charCountSpan = document.getElementById('charCount');
+            const saveDraftButton = document.getElementById('saveDraftButton');
+            const publishStoryButton = document.getElementById('publishStoryButton');
+            const imageUploadInput = document.getElementById('imageUpload');
+            const imageFileNameDisplay = document.getElementById('imageFileName');
+            const imagePreview = document.getElementById('imagePreview');
+            // Changed to processingOverlay, as it will handle the "processing" state
+            const processingOverlay = document.getElementById('processingOverlay'); 
+
+            // Store the current prompt fetched from the server
+            let fetchedPrompt = "";
+            let currentStoryId = null; // Variable to store the story ID after save/publish
+
+            // NEW: Variables to temporarily store selected image data before saving
+            let selectedImageBase64 = null;
+            let selectedImageFileExtension = null;
+
+
+            // Function to fetch the current story prompt
+            async function fetchCurrentStoryPrompt() {
+                try {
+                    const response = await fetch('/current-story');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    if (data && data.prompt && data.month) {
+                        fetchedPrompt = data.prompt; // Store the fetched prompt
+                        currentStoryPromptTextElement.innerHTML = `"${fetchedPrompt}"`;
+                        updateCharacterCount();
+                    } else {
+                        currentStoryPromptTextElement.textContent = "No story prompt available for this month. Start your own unique tale!";
+                    }
+                } catch (error) {
+                    console.error('Error fetching current story prompt:', error);
+                    currentStoryPromptTextElement.textContent = "Failed to load the story prompt. Please try again later.";
+                }
+            }
+
+            // Function to update character count
+            const updateCharacterCount = () => {
+                if (storyTextarea && charCountSpan) {
+                    charCountSpan.textContent = storyTextarea.value.length;
+                }
+            };
+
+            // Generic function to send story data to the server
+            async function sendStoryToServer(status) {
+                const storyTitle = storyTitleInput.value.trim();
+                let userWrittenContent = storyTextarea.value.trim(); // Use `let` because we might modify it
+
+                if (!storyTitle) {
+                    alert('Please enter a title for your story.');
+                    return;
+                }
+
+                if (!userWrittenContent) {
+                    alert('Please write some content for your story.');
+                    return;
+                }
+
+                // If publishing, ensure minimum length (example)
+                if (status === 'published' && userWrittenContent.length < 50) {
+                    alert('Your story is too short to publish. Please write at least 50 characters.');
+                    return;
+                }
+
+                // --- MODIFICATION START ---
+                // Only prepend the fetched prompt if it's a new story (currentStoryId is null)
+                // This prevents re-adding the prompt on subsequent saves of the same story.
+                if (currentStoryId === null && fetchedPrompt) {
+                    userWrittenContent = `${fetchedPrompt} ${userWrittenContent}`;
+                }
+                // --- MODIFICATION END ---
+
+                // IMMEDIATELY SHOW OVERLAY IF PUBLISHING
+                if (status === 'published') {
+                    processingOverlay.classList.add('active');
+                    // Change text to "Publishing..." or similar
+                    processingOverlay.querySelector('.overlay-content').textContent = 'Publishing your story...';
+                }
+
+                try {
+                    // Prepare data to send to the server, including image if selected
+                    const payload = {
+                        storyId: currentStoryId, // Include storyId if available (for updates)
+                        storyTitle,
+                        userWrittenContent: userWrittenContent, // Now contains combined content if new, or just user input if updating
+                        status
+                    };
+
+                    if (selectedImageBase64 && selectedImageFileExtension) {
+                        payload.base64Image = selectedImageBase64;
+                        payload.fileExtension = selectedImageFileExtension;
+                    }
+
+                    const response = await fetch('/api/save-story', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        if (status === 'published') {
+                            // Update overlay text to "Story Posted!"
+                            processingOverlay.querySelector('.overlay-content').textContent = 'Story Posted!';
+                            // Keep overlay active for a short duration, then redirect
+                            setTimeout(() => {
+                                processingOverlay.classList.remove('active');
+                                window.location.href = '/home.html'; // Redirect after 2 seconds (was 4s)
+                            }, 2000); // Reduced delay for faster UX after success message
+                        } else {
+                            // For drafts, just show alert and dismiss overlay if it was active
+                            alert(result.message);
+                            if (processingOverlay.classList.contains('active')) {
+                                processingOverlay.classList.remove('active');
+                            }
+                        }
+
+                        if (result.storyId) { // Capture the storyId returned from the server
+                            currentStoryId = result.storyId;
+                            console.log("Story ID set to:", currentStoryId);
+                        }
+                        
+                        // Clear image data after successful save/publish
+                        selectedImageBase64 = null;
+                        selectedImageFileExtension = null;
+                        imageFileNameDisplay.textContent = ""; // Clear image file name display
+                        imagePreview.style.display = 'none'; // Hide image preview
+                        imagePreview.src = '#'; // Clear image preview source
+                        imageUploadInput.value = ''; // Clear the file input element itself
+
+                        if (status === 'published') {
+                            storyTitleInput.value = ''; // Clear title
+                            storyTextarea.value = ''; // Clear content
+                            currentStoryId = null; // Clear story ID as it's a new story session
+                            updateCharacterCount();
+                        }
+                    } else {
+                        // Handle server-side errors
+                        alert(`Error: ${result.message}`);
+                        // Hide overlay on error
+                        if (processingOverlay.classList.contains('active')) {
+                            processingOverlay.classList.remove('active');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error sending story to server:', error);
+                    alert('An error occurred while saving/publishing your story. Please try again.');
+                    // Hide overlay on network error
+                    if (processingOverlay.classList.contains('active')) {
+                        processingOverlay.classList.remove('active');
+                    }
+                }
+            }
+
+            // Function to handle image selection and preview (no direct upload here)
+            async function handleImageSelect(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    selectedImageBase64 = null;
+                    selectedImageFileExtension = null;
+                    imageFileNameDisplay.textContent = "";
+                    imagePreview.style.display = 'none';
+                    imagePreview.src = '#';
+                    return;
+                }
+
+                imageFileNameDisplay.textContent = `Selected: ${file.name}`;
+
+                // Display image preview
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Only JPEG, PNG, and GIF images are allowed.');
+                    selectedImageBase64 = null;
+                    selectedImageFileExtension = null;
+                    imageFileNameDisplay.textContent = "";
+                    imagePreview.style.display = 'none';
+                    imagePreview.src = '#';
+                    imageUploadInput.value = ''; // Clear the file input
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    alert('Image file size must be less than 5MB.');
+                    selectedImageBase64 = null;
+                    selectedImageFileExtension = null;
+                    imageFileNameDisplay.textContent = "";
+                    imagePreview.style.display = 'none';
+                    imagePreview.src = '#';
+                    imageUploadInput.value = ''; // Clear the file input
+                    return;
+                }
+
+                try {
+                    // Convert image to base64 and store locally
+                    selectedImageBase64 = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = error => reject(error);
+                        reader.readAsDataURL(file);
+                    });
+                    selectedImageFileExtension = file.name.split('.').pop().toLowerCase();
+                    console.log("Image selected and converted to Base64. Will be sent with story save.");
+
+                } catch (error) {
+                    console.error('Error converting image to Base64:', error);
+                    alert('An error occurred while processing the image. Please try again.');
+                    selectedImageBase64 = null;
+                    selectedImageFileExtension = null;
+                    imageFileNameDisplay.textContent = "";
+                    imagePreview.style.display = 'none';
+                    imagePreview.src = '#';
+                    imageUploadInput.value = ''; // Clear the file input
+                }
+            }
+
+            // Event listeners for writing area and buttons
+            if (storyTextarea) {
+                storyTextarea.addEventListener('input', updateCharacterCount);
+            }
+
+            if (saveDraftButton) {
+                saveDraftButton.addEventListener('click', () => sendStoryToServer('draft'));
+            }
+
+            if (publishStoryButton) {
+                publishStoryButton.addEventListener('click', () => sendStoryToServer('published'));
+            }
+
+            // Changed event listener for imageUpload to use the new handleImageSelect function
+            if (imageUploadInput) {
+                imageUploadInput.addEventListener('change', handleImageSelect);
+            }
+
+            // Fetch and display the prompt when the page loads
+            fetchCurrentStoryPrompt();
+        });
+    </script>
+</body>
+</html>

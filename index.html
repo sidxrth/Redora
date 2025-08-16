@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redora - Write Your Story</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* Custom CSS variables for theme consistency */
+        :root {
+            --primary-color: #008080; /* Teal - Consistent with home/login */
+            --secondary-color: #FFA500; /* Vibrant Orange - Consistent with home/login */
+            --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+            --text-color-dark: #ccc; /* Light grey for text on dark sections/cards */
+            --button-bg-transparent: rgba(255, 255, 255, 0.1); /* Light transparent for frosted buttons */
+            --button-border: rgba(255, 255, 255, 0.2); /* Subtle transparent white for button border */
+            /* Removed --gradient-overlay as it's no longer for a specific hero-overlay */
+            --section-bg-dark: rgba(0, 0, 0, 0.6); /* Slightly less opaque for sections */
+            --button-hover-bg: rgba(255, 165, 0, 0.3); /* Orange transparent on hover */
+            --button-hover-border: rgba(255, 165, 0, 0.5); /* Slightly stronger orange border on hover */
+            --transition-speed: 0.3s;
+            --border-radius-large: 0.75rem; /* Consistent rounded corners from other pages */
+            --shadow-strong: 0 10px 20px rgba(0, 0, 0, 0.6); /* Stronger shadow for prominent elements */
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.6); /* Consistent card shadow for inner elements */
+        }
+
+        html {
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+            /* Background Image moved to HTML to be blurred by body */
+            background-image: url('/assets/indexbg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Keeps image fixed during scroll */
+            background-color: #000; /* Fallback if image fails */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Default body font */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Allow vertical stacking of content */
+            justify-content: flex-start; /* Align content from the top */
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scrollbars */
+            position: relative;
+            color: var(--text-color-light); /* Default color for hero text */
+            text-align: center;
+
+            /* !!! NEW: Apply transparent black glass effect to the entire body !!! */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            backdrop-filter: blur(8px); /* Blur everything behind the body */
+            -webkit-backdrop-filter: blur(8px); /* Safari support */
+        }
+
+        /* Removed .hero-overlay as it's no longer needed, the body handles the full page effect */
+        /* .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--gradient-overlay);
+            z-index: 1;
+        } */
+
+        .container {
+            position: relative;
+            z-index: 2; /* Ensure container is above the body's blur */
+            padding: 2rem;
+            max-width: 900px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh; /* Ensure hero content has vertical space */
+        }
+
+        .title {
+            font-family: 'Bebas Neue', sans-serif; /* Consistent heading font */
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8); /* Stronger shadow */
+            color: var(--secondary-color); /* Orange title for impact */
+        }
+
+        .tagline {
+            font-family: 'Inter', sans-serif; /* Consistent body font */
+            font-size: 1.75rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            line-height: 1.5;
+            max-width: 700px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            color: var(--text-color-light); /* Off-white for tag line */
+        }
+
+        .get-started-button {
+            padding: 1.2rem 3rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: var(--border-radius-large); /* Consistent rounded rectangle */
+            background-color: var(--button-bg-transparent); /* Transparent box */
+            border: 2px solid var(--button-border); /* Subtle border */
+            color: var(--text-color-light);
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(5px); /* Safari support */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            text-decoration: none; /* For the anchor tag if used */
+            display: inline-block; /* To apply padding correctly if it's an anchor */
+            font-family: 'Bebas Neue', sans-serif; /* Button text in Bebas Neue */
+            letter-spacing: 0.8px;
+        }
+
+        .get-started-button:hover {
+            background-color: var(--button-hover-bg); /* Less transparent orange on hover */
+            border-color: var(--button-hover-border); /* Solid orange border on hover */
+            transform: translateY(-5px) scale(1.02); /* Slight lift and scale */
+            box-shadow: var(--shadow-strong); /* More pronounced shadow */
+        }
+
+        /* Navigation Bar Styling */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Adjusted opacity for nav bar */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center; /* Center the logo */
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7); /* Consistent shadow */
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-sizing: border-box; /* Ensures padding is included in width */
+        }
+
+        nav .logo {
+            font-family: 'Bebas Neue', sans-serif; /* Explicitly set for logo */
+            font-size: 2rem; /* Adjusted size for consistency */
+            font-weight: 800;
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        nav .logo:hover {
+            color: var(--primary-color); /* Teal on hover */
+        }
+
+        nav .nav-links {
+            display: none; /* Hide nav-links as per request */
+        }
+
+        /* Section Styling */
+        section {
+            background-color: var(--section-bg-dark); /* Dark, slightly transparent background */
+            color: var(--text-color-dark); /* Default text color for inside sections */
+            padding: 4rem 2rem;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.4); /* Stronger shadow to separate from background */
+            margin-top: 2rem; /* Spacing between sections */
+            border-radius: var(--border-radius-large); /* Apply consistent rounded corners to sections */
+        }
+
+        section h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            color: var(--secondary-color); /* Orange heading for contrast */
+            margin-bottom: 2.5rem;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .feature-item {
+            background-color: rgba(26, 26, 26, 0.8); /* Dark background for feature cards, slightly less opaque */
+            padding: 2rem;
+            border-radius: var(--border-radius-large); /* Consistent rounded corners */
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            color: var(--text-color-light); /* Light text inside dark card */
+            border: 1px solid rgba(255,255,255,0.1); /* Subtle border */
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .feature-item i {
+            font-size: 3.5rem;
+            color: var(--primary-color); /* Teal icon color */
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--secondary-color); /* Orange heading inside card */
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-item p {
+            font-family: 'Inter', sans-serif; /* Use Inter for body text in features */
+            font-size: 1rem;
+            color: var(--text-color-dark); /* Lighter grey for body text */
+            line-height: 1.5;
+        }
+
+        /* Testimonials Section */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .testimonial-card {
+            background-color: rgba(26, 26, 26, 0.8); /* Dark background for testimonial cards, slightly less opaque */
+            padding: 2rem;
+            border-radius: var(--border-radius-large); /* Consistent rounded corners */
+            box-shadow: var(--card-shadow);
+            text-align: left;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Push name to bottom */
+            color: var(--text-color-light); /* Light text inside dark card */
+            border: 1px solid rgba(255,255,255,0.1); /* Subtle border */
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .testimonial-card p {
+            font-family: 'Inter', sans-serif; /* Use Inter for body text in testimonials */
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-color-dark); /* Lighter grey for body text */
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .testimonial-card .author {
+            font-weight: 700;
+            color: var(--primary-color); /* Teal for author name */
+            font-size: 1rem;
+            text-align: right;
+            margin-top: auto; /* Push to the bottom */
+        }
+
+        /* Footer for overall site consistency */
+        footer {
+            width: 100%;
+            background-color: rgba(34, 34, 34, 0.8); /* Consistent dark background for footer, slightly less opaque */
+            color: var(--text-color-dark);
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 4rem; /* Space before footer */
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+        .footer-links a {
+                color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color); /* Teal on hover */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3.5rem;
+                margin-bottom: 1rem;
+            }
+            .tagline {
+                font-size: 1.3rem;
+                margin-bottom: 2rem;
+            }
+            .get-started-button {
+                padding: 1rem 2rem;
+                font-size: 1.3rem;
+            }
+            nav {
+                flex-direction: column;
+                padding: 0.8rem 1rem;
+            }
+            nav .nav-links {
+                margin-top: 1rem;
+            }
+            nav .nav-links a {
+                margin: 0 1rem;
+                font-size: 1rem;
+            }
+            section {
+                padding: 3rem 1rem;
+            }
+            section h2 {
+                font-size: 2.5rem;
+            }
+            .features-grid, .testimonials-grid {
+                grid-template-columns: 1fr; /* Stack columns on small screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2.5rem;
+                margin-bottom: 0.8rem;
+            }
+            .tagline {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            .get-started-button {
+                padding: 0.8rem 1.8rem;
+                font-size: 1.1rem;
+            }
+            nav .logo {
+                font-size: 1.8rem;
+            }
+            nav .nav-links a {
+                margin: 0 0.8rem;
+                font-size: 0.9rem;
+            }
+            section h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">Redora</a>
+        <div class="nav-links">
+            </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="title">Redora</h1>
+        <p class="tagline">
+            Unleash your imagination. Craft captivating stories.
+            Your words, your world, beautifully brought to life.
+        </p>
+        <a href="/pages/login.html" class="get-started-button">Get Started</a>
+    </div>
+
+    <section id="features">
+        <h2>Why Choose Redora?</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <i class="fas fa-pencil-alt"></i>
+                <h3>Intuitive Editor</h3>
+                <p>A clean, distraction-free writing environment to help you focus on your craft.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-users"></i>
+                <h3>Collaborate & Share</h3>
+                <p>Share your drafts, get feedback, and collaborate with other writers.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-book-open"></i>
+                <h3>Publish with Ease</h3>
+                <p>Reach a wider audience by publishing your stories directly on our platform.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-comments"></i>
+                <h3>Connect with Readers</h3>
+                <p>Engage with your audience through comments and build your readership.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials">
+        <h2>What Our Writers Say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p>"Redora has transformed my writing process. The interface is amazing, and publishing is a breeze!"</p>
+                <span class="author">- Jane Doe, Bestselling Author</span>
+            </div>
+            <div class="testimonial-card">
+                <p>"Finally, a platform that truly understands a writer's needs. The community features are a huge plus."</p>
+                <span class="author">- John Smith, Aspiring Novelist</span>
+            </div>
+            <div class="testimonial-card">
+                <p>"From concept to publish, Redora Haven made every step simple and enjoyable. Highly recommended!"</p>
+                <span class="author">- Emily White, Short Story Enthusiast</span>
+            </div>
+        </div>
+    </section>
+
+ <footer>
+        <p>&copy; 2025 Redora. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/pages/footer/aboutdev.html">About Us</a>
+            <a href="/pages/footer/policy.html">Privacy Policy</a>
+            <a href="/pages/footer/terms.html">Terms of Service</a>
+        </div>
+    </footer>
+
+</body>
+</html>

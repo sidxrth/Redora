@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Redora</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #008080;
+      --secondary-color: #FFA500;
+      --text-color-light: #f0f0f0;
+      --text-color-dark: #ccc;
+      --border-radius-medium: 0.75rem;
+      --card-shadow-dark: 0 4px 20px rgba(0, 0, 0, 0.6);
+      --transition-speed: 0.3s;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #000;
+      color: var(--text-color-light);
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      width: 90%;
+      max-width: 1000px;
+      background-color: #1a1a1a;
+      border-radius: var(--border-radius-medium);
+      box-shadow: var(--card-shadow-dark);
+      overflow: hidden;
+      min-height: 500px;
+    }
+
+    .left {
+      flex: 1;
+      padding: 40px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .left h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+    }
+
+    .left p {
+      color: var(--text-color-dark);
+      margin-bottom: 30px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      width: 100%;
+      text-align: left;
+    }
+
+    .input-group label {
+      color: var(--text-color-light);
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 500;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--border-radius-medium);
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-color-light);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.3);
+    }
+
+    .btn {
+      background-color: var(--primary-color);
+      border: none;
+      color: white;
+      padding: 15px 25px;
+      width: 100%;
+      border-radius: var(--border-radius-medium);
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-bottom: 15px;
+      transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 30px;
+      color: var(--text-color-dark);
+    }
+
+    .footer a {
+      color: var(--secondary-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color var(--transition-speed) ease;
+    }
+
+    .footer a:hover {
+      color: var(--primary-color);
+    }
+
+    .right {
+      flex: 1;
+      background: url('../assets/spid.png') center center/cover no-repeat;
+      min-height: 300px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+        align-items: flex-start;
+      }
+
+      .container {
+        flex-direction: column;
+        width: 100%;
+        max-width: 500px;
+        min-height: auto;
+      }
+
+      .left {
+        padding: 30px 25px;
+      }
+
+      .left h1 {
+        font-size: 2.2rem;
+      }
+
+      .left p {
+        font-size: 0.9rem;
+      }
+
+      .right {
+        min-height: 200px;
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .left {
+        padding: 25px 20px;
+      }
+
+      .left h1 {
+        font-size: 1.8rem;
+      }
+
+      .btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+
+      .footer {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <h1>REDORA</h1>
+      <p>Create your account to join our community.</p>
+      <form id="signupForm">
+        <div class="input-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required />
+        </div>
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required />
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Create a password" required />
+        </div>
+        <button type="submit" class="btn">Sign Up</button>
+      </form>
+      <div class="footer">
+        Already have an account? <a href="/pages/login.html">Sign in</a>
+      </div>
+    </div>
+    <div class="right"></div>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const fullName = document.getElementById('fullName').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.message);
+          window.location.href = '/pages/login.html';
+        } else {
+          alert('Sign up failed: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error);
+        alert('An error occurred. Please try again later.');
+      }
+    });
+  </script>
+</body>
+</html>

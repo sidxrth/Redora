@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Users - Redora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* Basic styles, often pulled from a common CSS file */
+        :root {
+            --primary-color: #008080; /* Teal */
+            --secondary-color: #FFA500; /* Orange */
+            --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+            --text-color-dark: #ccc; /* Light grey for text on black sections */
+            --button-bg: rgba(255, 255, 255, 0.1); /* Light transparent background for buttons */
+            --button-border: rgba(255, 255, 255, 0.2); /* Subtle border for buttons */
+            --button-hover-bg: rgba(255, 165, 0, 0.3); /* Orange transparent on hover */
+            --button-hover-border: rgba(255, 165, 0, 0.5); /* Slightly stronger orange border on hover */
+            --transition-speed: 0.3s;
+            --border-radius-medium: 0.75rem;
+            --card-shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.5);
+            --section-bg-dark: rgba(0, 0, 0, 0.8); /* Dark, slightly transparent background for sections */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #000; /* Black background */
+            color: var(--text-color-light); /* Default text color on black */
+            text-align: center;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--secondary-color); /* Orange headings for contrast */
+            letter-spacing: 1px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Dark semi-transparent nav */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color-light);
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1001;
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+      .logo{
+            font-family: 'Bebas Neue', sans-serif; /* Explicitly set for logo */
+            font-size: 2rem;
+            font-weight: 800; /* Matches about.html's implied boldness */
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+            flex-grow: 1; /* Allows logo to take available space */
+            text-align: center; /* Center the logo text */
+        }
+
+
+        header .logo:hover {
+            color: var(--primary-color);
+        }
+
+        .header-spacer {
+            height: 100px; /* Spacer to push content below fixed header */
+            width: 100%;
+        }
+
+        /* Search Page Specific Styles */
+        .search-container {
+            background-color: var(--section-bg-dark);
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            padding: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            width: 90%;
+            box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-container h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .search-bar input[type="text"] {
+            flex-grow: 1;
+            padding: 0.8rem 1rem;
+            border-radius: var(--border-radius-medium);
+            border: 1px solid var(--button-border);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color-light);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color var(--transition-speed) ease;
+        }
+
+        .search-bar input[type="text"]::placeholder {
+            color: var(--text-color-dark);
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-bar button {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius-medium);
+            border: 1px solid var(--primary-color);
+            background-color: var(--primary-color);
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+        }
+
+        .search-bar button:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .search-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .user-card {
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center content vertically */
+            min-height: 180px; /* Ensure cards have a minimum height */
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7), 0 0 10px var(--primary-color);
+        }
+
+        .user-card a {
+            text-decoration: none;
+            color: inherit; /* Inherit color from parent for consistency */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%; /* Make the link fill the card */
+            justify-content: center;
+        }
+
+        .user-card .profile-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 0.8rem;
+            transition: border-color var(--transition-speed) ease;
+        }
+
+        .user-card:hover .profile-photo {
+            border-color: var(--secondary-color);
+        }
+
+        .user-card h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-color-light);
+            margin: 0;
+            white-space: nowrap; /* Prevent name from wrapping */
+            overflow: hidden; /* Hide overflow text */
+            text-overflow: ellipsis; /* Add ellipsis for overflow */
+            max-width: 100%; /* Ensure text respects card width */
+        }
+
+        .no-results, .search-error, .loading-message {
+            font-size: 1.1rem;
+            color: var(--text-color-dark);
+            margin-top: 2rem;
+            width: 100%;
+        }
+        .search-error {
+            color: #ff4d4d;
+        }
+        .loading-message {
+            color: var(--primary-color);
+        }
+
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: #222;
+            color: var(--text-color-dark);
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header { padding: 1rem; }
+            .back-button { left: 10px; font-size: 1.3rem; }
+            header .logo { font-size: 1.8rem; }
+            .search-container { padding: 1.5rem; width: 95%; }
+            .search-container h2 { font-size: 2rem; }
+            .search-bar { flex-direction: column; gap: 15px; }
+            .search-bar button { width: 100%; }
+            .search-results { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .user-card { padding: 1rem; min-height: 160px; }
+            .user-card .profile-photo { width: 70px; height: 70px; }
+            .user-card h4 { font-size: 1.3rem; }
+        }
+
+        @media (max-width: 480px) {
+            header { padding: 0.8rem; }
+            .back-button { left: 5px; font-size: 1.1rem; }
+            header .logo { font-size: 1.6rem; }
+            .search-results { grid-template-columns: 1fr; } /* Single column on very small screens */
+        }
+    </style>
+</head>
+<body>
+   <header>
+    <a href="/home.html" class="back-button" title="Back to Home">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <h1 class="logo">REDORA</h1>
+</header>
+
+
+
+    <div class="header-spacer"></div>
+
+    <main class="search-container">
+        <h2>Find Users</h2>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by name or email..." />
+            <button id="searchButton"><i class="fas fa-search"></i> Search</button>
+        </div>
+
+        <div id="searchResults" class="search-results">
+            <p class="no-results">Start typing to find users...</p>
+        </div>
+    </main>
+
+ <footer>
+        <p>&copy; 2025 Redora. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/pages/footer/aboutus.html">About Us</a>
+            <a href="/pages/footer/privacy.html">Privacy Policy</a>
+            <a href="/pages/footer/terms.html">Terms of Service</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const searchResultsDiv = document.getElementById('searchResults');
+
+            const performSearch = async () => {
+                const query = searchInput.value.trim();
+                if (query.length === 0) {
+                    searchResultsDiv.innerHTML = '<p class="no-results">Start typing to find users...</p>';
+                    return;
+                }
+
+                searchResultsDiv.innerHTML = '<p class="loading-message"><i class="fas fa-spinner fa-spin"></i> Searching...</p>';
+
+                try {
+                    const response = await fetch(`/api/search-users?q=${encodeURIComponent(query)}`);
+
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            window.location.href = '/pages/login.html'; // Redirect to login if not authenticated
+                            throw new Error('Unauthorized');
+                        }
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const users = await response.json();
+                    displayResults(users);
+
+                } catch (error) {
+                    console.error('Error fetching search results:', error);
+                    searchResultsDiv.innerHTML = '<p class="search-error">Error searching for users. Please try again.</p>';
+                }
+            };
+
+            const displayResults = (users) => {
+                searchResultsDiv.innerHTML = ''; // Clear previous results
+
+                if (users.length === 0) {
+                    searchResultsDiv.innerHTML = '<p class="no-results">No users found matching your criteria.</p>';
+                    return;
+                }
+
+                users.forEach(user => {
+                    const userCard = document.createElement('div');
+                    userCard.classList.add('user-card');
+
+                    // Use user.profileImageURL from the fetched data
+                    // Add a fallback for profileImageURL in case it's null or broken
+                    const profileImageUrl = user.profileImageURL || 'https://placehold.co/80x80/cccccc/444444?text=No+Img'; 
+                    
+                    userCard.innerHTML = `
+                        <a href="/pages/other.html?userId=${user.id}" title="View ${user.fullName}'s profile">
+                            <img src="${profileImageUrl}" alt="${user.fullName}'s profile photo" class="profile-photo">
+                            <h4>${user.fullName}</h4>
+                        </a>
+                    `;
+                    searchResultsDiv.appendChild(userCard);
+                });
+            };
+
+            // Event Listeners
+            searchButton.addEventListener('click', performSearch);
+
+            searchInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // Optional: Perform an initial empty search or display a welcome message
+            // You can call performSearch() here if you want to show all users initially
+            // or just leave the "Start typing..." message as is.
+        });
+    </script>
+</body>
+</html>

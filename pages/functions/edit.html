@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile - Story Weaver</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* Custom CSS variables for theme consistency */
+        :root {
+            --primary-color: #008080; /* Teal */
+            --secondary-color: #FFA500; /* Orange */
+            --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+            --text-color-dark: #ccc; /* Light grey for text on black sections */
+            --button-bg: rgba(255, 255, 255, 0.1); /* Light transparent background for buttons */
+            --button-border: rgba(255, 255, 255, 0.2); /* Subtle border for buttons */
+            --button-hover-bg: rgba(255, 165, 0, 0.3); /* Orange transparent on hover */
+            --button-hover-border: rgba(255, 165, 0, 0.5); /* Slightly stronger orange border on hover */
+            --transition-speed: 0.3s;
+            --border-radius-medium: 0.75rem;
+            --card-shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.5);
+            --section-bg-dark: rgba(0, 0, 0, 0.8); /* Dark, slightly transparent background for sections */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #000; /* Black background */
+            color: var(--text-color-light); /* Default text color on black */
+            text-align: center;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--secondary-color); /* Orange headings for contrast */
+            letter-spacing: 1px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Dark semi-transparent nav */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between; /* Distribute items */
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            position: absolute; /* Position relative to header */
+            left: 20px; /* Distance from left edge */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Adjust for perfect vertical centering */
+            color: var(--text-color-light);
+            font-size: 1.5rem; /* Icon size */
+            text-decoration: none;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1001; /* Ensure it's above other header elements if needed */
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1); /* Slight grow on hover */
+        }
+
+        header .logo {
+           font-family: 'Bebas Neue', sans-serif; /* Explicitly set for logo */
+            font-size: 2rem;
+            font-weight: 800; /* Matches about.html's implied boldness */
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+            flex-grow: 1; /* Allows logo to take available space */
+            text-align: center; /* Center the logo text */
+        }
+
+        header .logo:hover {
+            color: var(--primary-color);
+        }
+
+        .header-spacer {
+            height: 100px; /* Space to push content below fixed header */
+            width: 100%;
+        }
+
+        /* Edit Profile Container */
+        .edit-profile-container {
+            background-color: var(--section-bg-dark);
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            padding: 3rem 2rem;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            width: 90%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .edit-profile-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+        }
+
+        /* Form Styling */
+        .profile-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .form-group {
+            width: 100%;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--text-color-light);
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #333;
+            border-radius: var(--border-radius-medium);
+            background-color: #1a1a1a;
+            color: var(--text-color-light);
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        .form-group input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 128, 128, 0.3);
+        }
+
+        /* Profile Picture Section */
+        .profile-picture-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .profile-display.canvas-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden; /* Hide parts of image outside the circle */
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 0 0 5px rgba(255, 165, 0, 0.3);
+            background-color: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem; /* Space between picture and button */
+        }
+
+        #profile-display-canvas { /* Renamed for clarity */
+            background-color: #000;
+            display: block; /* Ensure canvas takes full space */
+            border-radius: 50%; /* Make canvas itself circular for visual consistency */
+        }
+
+        .edit-photo-icon {
+            position: absolute;
+            bottom: 50%; 
+            right: 50%;
+            transform: translate(50%, 50%); /* Center horizontally and vertically */
+            background-color: var(--secondary-color); /* Orange background for the icon */
+            color: white;
+            border: 3px solid white; /* Slightly thicker border for more pop */
+            border-radius: 50%;
+            width: 45px; /* Increased size */
+            height: 45px; /* Increased size */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem; /* Increased icon size */
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            opacity: 0; /* Initially hidden */
+            visibility: hidden; /* Initially hidden */
+            transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            z-index: 5; /* Ensure it's above the canvas */
+        }
+
+        /* Show the icon on hover of the canvas container */
+        .profile-display.canvas-container:hover .edit-photo-icon {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(50%, 50%) scale(1.15); /* Keep hover effect on icon */
+        }
+
+        .edit-photo-icon:hover {
+            background-color: var(--primary-color); /* Teal on hover */
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.6);
+        }
+        
+        .save-changes-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: var(--border-radius-medium);
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-family: 'Bebas Neue', sans-serif;
+            margin-top: 2rem;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .save-changes-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .save-changes-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: #222;
+            color: var(--text-color-dark);
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto; /* Pushes footer to the bottom */
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100; /* Higher than header */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--section-bg-dark);
+            padding: 2rem;
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            max-width: 500px; /* Adjust modal width as needed */
+            width: 90%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateY(-20px); /* Initial subtle animation */
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-content .close-modal-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--text-color-light);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+        .modal-content .close-modal-btn:hover {
+            color: var(--secondary-color);
+            transform: rotate(90deg);
+        }
+
+        .modal-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .modal-canvas-wrapper { /* Wrapper for the crop canvas inside modal */
+            position: relative;
+            width: 250px; /* Size for cropping in modal */
+            height: 250px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 0 0 5px rgba(255, 165, 0, 0.3);
+            background-color: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            cursor: grab;
+        }
+
+        #modal-crop-canvas { /* Canvas inside the modal */
+            background-color: #000;
+            display: block;
+        }
+
+        .modal-controls { /* Controls within the modal */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 280px; /* Limit width of controls */
+        }
+
+        .modal-controls button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Bebas Neue', sans-serif;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .modal-controls button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .modal-controls button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+
+        /* Responsive Adjustments for Modal */
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            .modal-content h3 {
+                font-size: 1.8rem;
+            }
+            .modal-canvas-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+            .modal-controls button {
+                padding: 0.7rem 1.1rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                padding: 1rem;
+                width: 95%;
+            }
+            .modal-content h3 {
+                font-size: 1.5rem;
+            }
+            .modal-canvas-wrapper {
+                width: 180px;
+                height: 180px;
+            }
+            .modal-controls {
+                max-width: 250px;
+            }
+            .modal-controls button {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* --- Loading Overlay Styles --- */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1200; /* Higher than modals */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #loading-overlay .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3); /* Light grey border */
+            border-top: 8px solid var(--secondary-color); /* Orange top border for spinner effect */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite; /* Spin animation */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../userpage.html" class="back-button" title="Back to Profile">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <a href="#" class="logo">REDORA</a>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <main class="edit-profile-container">
+        <h2>Edit Your Profile</h2>
+
+        <form class="profile-form">
+            <div class="profile-picture-section">
+                <div class="canvas-container profile-display">
+                    <canvas id="profile-display-canvas" width="200" height="200"></canvas>
+                    <input type="file" id="profile-picture-upload" accept="image/*" style="display: none;">
+                    <div class="edit-photo-icon" id="edit-photo-icon" title="Change Profile Picture">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" value="" placeholder="Enter your username">
+            </div>
+
+            <button type="submit" class="save-changes-btn" id="save-changes-btn">Save Changes</button>
+        </form>
+    </main>
+
+ <footer>
+        <p>&copy; 2025 Redora. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/pages/footer/aboutdev.html">About Us</a>
+            <a href="/pages/footer/policy.html">Privacy Policy</a>
+            <a href="/pages/footer/terms.html">Terms of Service</a>
+        </div>
+    </footer>
+
+    <div id="crop-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal-btn" id="close-crop-modal"><i class="fas fa-times"></i></button>
+            <h3>Adjust & Crop Profile Picture</h3>
+            
+            <div class="modal-canvas-wrapper">
+                <canvas id="modal-crop-canvas" width="250" height="250"></canvas>
+            </div>
+
+            <div class="modal-controls">
+                <button type="button" id="modal-reset-position-btn"><i class="fas fa-sync-alt"></i> Reset Position</button>
+                <button type="button" id="modal-crop-and-set-btn"><i class="fas fa-check-circle"></i> Crop & Set Picture</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const usernameInput = document.getElementById('username');
+            const profilePictureUpload = document.getElementById('profile-picture-upload');
+            const profileDisplayCanvas = document.getElementById('profile-display-canvas');
+            const profileDisplayCtx = profileDisplayCanvas.getContext('2d');
+            const editPhotoIcon = document.getElementById('edit-photo-icon');
+            const saveChangesBtn = document.getElementById('save-changes-btn');
+            const loadingOverlay = document.getElementById('loading-overlay'); // New: Get loading overlay
+
+            // Modal elements
+            const cropModal = document.getElementById('crop-modal');
+            const closeModalBtn = document.getElementById('close-crop-modal');
+            const modalCropCanvas = document.getElementById('modal-crop-canvas');
+            const modalCropCtx = modalCropCanvas.getContext('2d');
+            const modalResetPositionBtn = document.getElementById('modal-reset-position-btn');
+            const modalCropAndSetBtn = document.getElementById('modal-crop-and-set-btn');
+
+            let currentProfilePicDataURL = "https://placehold.co/200x200/008080/FFFFFF?text=User"; // Default placeholder
+            let imageToCrop = new Image(); // The image being manipulated in the modal
+            let currentCropImgData = {
+                x: 0,
+                y: 0,
+                scale: 1
+            };
+            let initialCropImgData = {}; // To store initial image data for reset
+            let isDragging = false;
+            let startX, startY;
+
+            let profilePicHasChanged = false; // Flag to track if profile picture needs uploading
+            let originalUsername = ""; // To store the original username to check if it changed
+
+            const DISPLAY_CANVAS_SIZE = 200; // Size for profile-display-canvas
+            const MODAL_CANVAS_SIZE = 250; // Size for modal-crop-canvas
+
+            // Initialize display canvas
+            profileDisplayCanvas.width = DISPLAY_CANVAS_SIZE;
+            profileDisplayCanvas.height = DISPLAY_CANVAS_SIZE;
+
+            // Initialize modal canvas
+            modalCropCanvas.width = MODAL_CANVAS_SIZE;
+            modalCropCanvas.height = MODAL_CANVAS_SIZE;
+
+            /**
+             * Draws the profile picture on the main display canvas.
+             * This handles drawing the final cropped image.
+             */
+            function drawProfilePicture(imageDataURL) {
+                const img = new Image();
+                img.onload = () => {
+                    profileDisplayCtx.clearRect(0, 0, DISPLAY_CANVAS_SIZE, DISPLAY_CANVAS_SIZE);
+                    profileDisplayCtx.save();
+                    profileDisplayCtx.beginPath();
+                    profileDisplayCtx.arc(DISPLAY_CANVAS_SIZE / 2, DISPLAY_CANVAS_SIZE / 2, DISPLAY_CANVAS_SIZE / 2, 0, Math.PI * 2, true);
+                    profileDisplayCtx.closePath();
+                    profileDisplayCtx.clip(); 
+
+                    const imgAspectRatio = img.naturalWidth / img.naturalHeight;
+                    let drawWidth, drawHeight, offsetX, offsetY;
+
+                    // Calculate dimensions to cover the circle
+                    if (imgAspectRatio > 1) { 
+                        drawHeight = DISPLAY_CANVAS_SIZE;
+                        drawWidth = DISPLAY_CANVAS_SIZE * imgAspectRatio;
+                        offsetX = (DISPLAY_CANVAS_SIZE - drawWidth) / 2;
+                        offsetY = 0;
+                    } else { 
+                        drawWidth = DISPLAY_CANVAS_SIZE;
+                        drawHeight = DISPLAY_CANVAS_SIZE / imgAspectRatio;
+                        offsetX = 0;
+                        offsetY = (DISPLAY_CANVAS_SIZE - drawHeight) / 2;
+                    }
+                    profileDisplayCtx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+                    profileDisplayCtx.restore();
+                };
+                // Ensure img.onerror is handled for broken image URLs
+                img.onerror = () => {
+                    console.error("Failed to load profile image from URL:", imageDataURL);
+                    // Fallback to a local placeholder if the URL is broken
+                    profileDisplayCtx.clearRect(0, 0, DISPLAY_CANVAS_SIZE, DISPLAY_CANVAS_SIZE);
+                    profileDisplayCtx.fillStyle = '#008080'; // Primary color for fallback
+                    profileDisplayCtx.beginPath();
+                    profileDisplayCtx.arc(DISPLAY_CANVAS_SIZE / 2, DISPLAY_CANVAS_SIZE / 2, DISPLAY_CANVAS_SIZE / 2, 0, Math.PI * 2);
+                    profileDisplayCtx.fill();
+                    profileDisplayCtx.font = 'bold 30px Arial';
+                    profileDisplayCtx.fillStyle = '#FFFFFF';
+                    profileDisplayCtx.textAlign = 'center';
+                    profileDisplayCtx.textBaseline = 'middle';
+                    profileDisplayCtx.fillText('User', DISPLAY_CANVAS_SIZE / 2, DISPLAY_CANVAS_SIZE / 2);
+                    currentProfilePicDataURL = "data:image/png;base64,..."; // Reset to a generic data URL if needed
+                };
+                img.src = imageDataURL;
+            }
+
+            /**
+             * Fetches user data from the backend and populates the form fields.
+             */
+            async function fetchUserData() {
+                try {
+                    const response = await fetch('/api/user-profile'); //
+                    if (response.ok) { //
+                        const userData = await response.json(); //
+                        usernameInput.value = userData.fullName; //
+                        originalUsername = userData.fullName; // Store original username for comparison
+                        if (userData.profileImageURL) { //
+                            currentProfilePicDataURL = userData.profileImageURL; //
+                            drawProfilePicture(currentProfilePicDataURL); //
+                        } else {
+                            // Use a default placeholder if no image URL is provided
+                            drawProfilePicture("https://placehold.co/200x200/008080/FFFFFF?text=User");
+                        }
+                    } else {
+                        console.error('Failed to fetch user data:', response.status, response.statusText);
+                        alert('Failed to load profile data. Please try again.');
+                        // Fallback to default values
+                        usernameInput.value = "User";
+                        drawProfilePicture("https://placehold.co/200x200/008080/FFFFFF?text=User");
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                    alert('An error occurred while loading profile data. Check your network.');
+                    // Fallback to default values
+                    usernameInput.value = "User";
+                    drawProfilePicture("https://placehold.co/200x200/008080/FFFFFF?text=User");
+                }
+            }
+
+            /**
+             * Draws the image on the modal cropping canvas with current transformations.
+             */
+            function drawModalImage() {
+                modalCropCtx.clearRect(0, 0, MODAL_CANVAS_SIZE, MODAL_CANVAS_SIZE);
+                modalCropCtx.save();
+
+                // Apply translation and scale for positioning
+                modalCropCtx.translate(currentCropImgData.x, currentCropImgData.y);
+                modalCropCtx.scale(currentCropImgData.scale, currentCropImgData.scale);
+                
+                // Draw the image
+                modalCropCtx.drawImage(imageToCrop, 0, 0, imageToCrop.naturalWidth, imageToCrop.naturalHeight);
+
+                modalCropCtx.restore();
+            }
+
+            /**
+             * Resets image transformations and redraws it on the modal canvas.
+             * Ensures the image covers the circular cropping area while maintaining aspect ratio.
+             */
+            function resetModalImageTransform() {
+                const imgAspectRatio = imageToCrop.naturalWidth / imageToCrop.naturalHeight;
+                const canvasAspectRatio = MODAL_CANVAS_SIZE / MODAL_CANVAS_SIZE; 
+
+                let scale;
+                // Determine scale to ensure the image *covers* the entire circular canvas area
+                if (imgAspectRatio > canvasAspectRatio) {
+                    scale = MODAL_CANVAS_SIZE / imageToCrop.naturalHeight;
+                } else {
+                    scale = MODAL_CANVAS_SIZE / imageToCrop.naturalWidth;
+                }
+
+                currentCropImgData = {
+                    x: (MODAL_CANVAS_SIZE - imageToCrop.naturalWidth * scale) / 2,
+                    y: (MODAL_CANVAS_SIZE - imageToCrop.naturalHeight * scale) / 2,
+                    scale: scale
+                };
+                drawModalImage();
+            }
+
+            // --- Event Listeners ---
+
+            // Call fetchUserData when the DOM is loaded
+            fetchUserData(); //
+
+            // Open modal when edit icon is clicked
+            editPhotoIcon.addEventListener('click', () => {
+                profilePictureUpload.click(); // Trigger hidden file input
+            });
+
+            // Handle file selection
+            profilePictureUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        imageToCrop = new Image();
+                        imageToCrop.onload = () => {
+                            resetModalImageTransform(); // Initialize image on modal canvas
+                            initialCropImgData = { ...currentCropImgData }; // Store initial state for reset
+                            
+                            // Show the modal and enable buttons
+                            cropModal.classList.add('active');
+                            document.body.style.overflow = 'hidden'; // Prevent scrolling on main page
+                            modalCropAndSetBtn.disabled = false;
+                            modalResetPositionBtn.disabled = false;
+                        };
+                        imageToCrop.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Reset file input if no file selected
+                    profilePictureUpload.value = ''; 
+                }
+            });
+
+            // Close modal
+            closeModalBtn.addEventListener('click', () => {
+                cropModal.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+                profilePictureUpload.value = ''; // Clear file input
+            });
+
+            // Close modal if overlay is clicked
+            cropModal.addEventListener('click', (e) => {
+                if (e.target === cropModal) {
+                    closeModalBtn.click();
+                }
+            });
+
+            // Dragging functionality for modal canvas
+            modalCropCanvas.addEventListener('mousedown', (e) => {
+                // Only allow dragging if a valid image is loaded (not error placeholder)
+                if (imageToCrop.src.includes("placehold.co")) return; 
+
+                isDragging = true;
+                const rect = modalCropCanvas.getBoundingClientRect();
+                startX = e.clientX - rect.left - currentCropImgData.x;
+                startY = e.clientY - rect.top - currentCropImgData.y;
+                modalCropCanvas.style.cursor = 'grabbing';
+            });
+
+            modalCropCanvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const rect = modalCropCanvas.getBoundingClientRect();
+                currentCropImgData.x = e.clientX - rect.left - startX;
+                currentCropImgData.y = e.clientY - rect.top - startY;
+                drawModalImage();
+            });
+
+            modalCropCanvas.addEventListener('mouseup', () => {
+                isDragging = false;
+                modalCropCanvas.style.cursor = 'grab';
+            });
+
+            modalCropCanvas.addEventListener('mouseleave', () => {
+                isDragging = false; 
+                modalCropCanvas.style.cursor = 'grab';
+            });
+            
+            // Reset position for modal image
+            modalResetPositionBtn.addEventListener('click', () => {
+                currentCropImgData = { ...initialCropImgData }; 
+                drawModalImage();
+            });
+
+            // Crop & Set Picture button in modal
+            modalCropAndSetBtn.addEventListener('click', () => {
+                if (!imageToCrop.src || imageToCrop.src.includes("placehold.co")) {
+                    console.warn("No valid image to crop in modal.");
+                    return;
+                }
+
+                const finalCropCanvas = document.createElement('canvas');
+                finalCropCanvas.width = DISPLAY_CANVAS_SIZE; // Crop to the size of the display canvas
+                finalCropCanvas.height = DISPLAY_CANVAS_SIZE;
+                const finalCtx = finalCropCanvas.getContext('2d');
+
+                finalCtx.beginPath();
+                finalCtx.arc(DISPLAY_CANVAS_SIZE / 2, DISPLAY_CANVAS_SIZE / 2, DISPLAY_CANVAS_SIZE / 2, 0, Math.PI * 2, true);
+                finalCtx.closePath();
+                finalCtx.clip(); 
+
+                // Apply current transformations from modal canvas to final crop
+                finalCtx.translate(currentCropImgData.x * (DISPLAY_CANVAS_SIZE / MODAL_CANVAS_SIZE), currentCropImgData.y * (DISPLAY_CANVAS_SIZE / MODAL_CANVAS_SIZE));
+                finalCtx.scale(currentCropImgData.scale * (DISPLAY_CANVAS_SIZE / MODAL_CANVAS_SIZE), currentCropImgData.scale * (DISPLAY_CANVAS_SIZE / MODAL_CANVAS_SIZE));
+                finalCtx.drawImage(imageToCrop, 0, 0, imageToCrop.naturalWidth, imageToCrop.naturalHeight);
+
+                currentProfilePicDataURL = finalCropCanvas.toDataURL('image/png');
+                drawProfilePicture(currentProfilePicDataURL); // Update the main profile picture
+                profilePicHasChanged = true; // Set flag to true as image is updated
+                closeModalBtn.click(); // Close the modal
+            });
+
+            // Save Changes button handler for the main page
+            saveChangesBtn.addEventListener('click', async (event) => { // Added 'async' keyword
+                event.preventDefault();
+                loadingOverlay.classList.add('active'); // Show loading overlay
+
+                const newUsername = usernameInput.value.trim(); // Trim whitespace
+                let usernameUpdated = false;
+                let profilePicUploaded = false;
+                let hasError = false;
+
+                // Check if username actually changed
+                const isUsernameChanged = (newUsername !== originalUsername);
+
+                // --- Handle Username Update ---
+                if (isUsernameChanged) {
+                    if (!newUsername) {
+                        alert("Username cannot be empty!"); // Use alert for user feedback
+                        loadingOverlay.classList.remove('active'); // Hide loading overlay on validation error
+                        return; // Stop execution if username is empty
+                    }
+                    try {
+                        const usernameResponse = await fetch('/api/user/profile/update-username', { //
+                            method: 'POST', //
+                            headers: {
+                                'Content-Type': 'application/json', //
+                            },
+                            body: JSON.stringify({ username: newUsername }) //
+                        });
+
+                        if (usernameResponse.ok) { //
+                            const data = await usernameResponse.json(); //
+                            console.log('Username updated successfully!', data);
+                            usernameUpdated = true;
+                            originalUsername = newUsername; // Update original username
+                        } else {
+                            const errorData = await usernameResponse.json(); //
+                            console.error('Failed to update username:', errorData.message || usernameResponse.statusText);
+                            alert('Failed to update username: ' + (errorData.message || 'Please try again.'));
+                            hasError = true;
+                        }
+                    } catch (error) {
+                        console.error('Error updating username:', error);
+                        alert('An error occurred while updating username. Please check your network and try again.');
+                        hasError = true;
+                    }
+                } else {
+                    usernameUpdated = true; // No change, so consider it "updated" successfully
+                }
+
+                if (hasError) {
+                    loadingOverlay.classList.remove('active'); // Hide loading overlay if an error occurred
+                    return; // Stop further execution if username update failed
+                }
+
+
+                // --- Handle Profile Picture Upload ---
+                if (profilePicHasChanged) { // Only attempt upload if the picture has been changed
+                    // Extract file extension from the data URL
+                    const mimeTypeMatch = currentProfilePicDataURL.match(/^data:image\/([a-zA-Z0-9]+);base64,/);
+                    if (!mimeTypeMatch || !mimeTypeMatch[1]) {
+                        alert("Could not determine image file type for upload.");
+                        loadingOverlay.classList.remove('active'); // Hide loading overlay
+                        return;
+                    }
+                    const fileExtension = mimeTypeMatch[1];
+                    const base64Image = currentProfilePicDataURL; // This already contains the prefix, backend handles it
+
+                    try {
+                        const imageResponse = await fetch('/api/upload-profile-image', { //
+                            method: 'POST', //
+                            headers: {
+                                'Content-Type': 'application/json', //
+                            },
+                            body: JSON.stringify({
+                                base64Image: base64Image, //
+                                fileExtension: fileExtension //
+                            })
+                        });
+
+                        if (imageResponse.ok) { //
+                            const data = await imageResponse.json(); //
+                            console.log('Profile image uploaded successfully!', data);
+                            profilePicUploaded = true;
+                            profilePicHasChanged = false; // Reset flag after successful upload
+                        } else {
+                            const errorData = await imageResponse.json(); //
+                            console.error('Failed to upload profile image:', errorData.message || imageResponse.statusText);
+                            alert('Failed to upload profile image: ' + (errorData.message || 'Please try again.'));
+                            hasError = true;
+                        }
+                    } catch (error) {
+                        console.error('Error uploading profile image:', error);
+                        alert('An error occurred while uploading profile image. Please check your network and try again.');
+                        hasError = true;
+                    }
+                } else {
+                    profilePicUploaded = true; // No change, so consider it "uploaded" successfully
+                }
+
+                // If no errors occurred in either operation, proceed with navigation
+                if (!hasError) {
+                    loadingOverlay.classList.remove('active'); // Hide loading overlay
+                    // Give a very short moment for the overlay to disappear before navigating
+                    setTimeout(() => {
+                        window.location.href = '../userpage.html';
+                    }, 100); 
+                } else {
+                    loadingOverlay.classList.remove('active'); // Ensure overlay is hidden if an error occurred
+                }
+            });
+
+            // Initialize modal buttons as disabled
+            modalCropAndSetBtn.disabled = true;
+            modalResetPositionBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>

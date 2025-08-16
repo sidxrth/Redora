@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page - REDORA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <style>
+    /* Custom CSS variables for theme consistency */
+    :root {
+      --primary-color: #008080; /* Teal */
+      --secondary-color: #FFA500; /* Orange */
+      --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+      --text-color-dark: #ccc; /* Light grey for text on black sections */
+      --button-bg: rgba(255, 255, 255, 0.1); /* Light transparent background for buttons */
+      --button-border: rgba(255, 255, 255, 0.2); /* Subtle border for buttons */
+      --button-hover-bg: rgba(255, 165, 0, 0.3); /* Orange transparent on hover */
+      --button-hover-border: rgba(255, 165, 0, 0.5); /* Slightly stronger orange border on hover */
+      --transition-speed: 0.3s;
+      --border-radius-medium: 0.75rem; /* Consistent rounded corners */
+      --card-shadow-dark: 0 4px 20px rgba(0, 0, 0, 0.6); /* Deeper shadow for main elements */
+    }
+
+    * {
+      box-sizing: border-box;
+      /* Apply Inter as the primary font, with Bebas Neue for headings handled separately */
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #000; /* Black background like home.html */
+      color: var(--text-color-light); /* Default text color */
+      overflow: hidden; /* Prevent scrollbars if elements are slightly larger */
+    }
+    .container {
+      display: flex;
+      width: 90%; /* Max width for container */
+      max-width: 1000px; /* Constrain max width for desktop */
+      min-height: 500px; /* Ensure minimum height */
+      background-color: #1a1a1a; /* Dark background for the form container */
+      border-radius: var(--border-radius-medium);
+      box-shadow: var(--card-shadow-dark);
+      overflow: hidden; /* Ensures rounded corners are respected */
+    }
+    .left {
+      flex: 1;
+      padding: 40px 50px; /* Adjusted padding */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start; /* Align text to left within this section */
+    }
+    .left h1 {
+      font-family: 'Bebas Neue', sans-serif; /* Apply Bebas Neue font */
+      font-size: 2.8rem; /* Larger heading */
+      letter-spacing: 1px;
+      margin-bottom: 10px; /* Adjusted margin */
+      color: var(--secondary-color); /* Orange heading color */
+    }
+    .left p {
+      color: var(--text-color-dark); /* Lighter grey for descriptive text */
+      margin-bottom: 30px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .input-group {
+      margin-bottom: 20px;
+      width: 100%; /* Ensure input group takes full width */
+      text-align: left; /* Align label to left */
+    }
+    .input-group label {
+      color: var(--text-color-light); /* Label color */
+      font-size: 0.95rem;
+      margin-bottom: 8px; /* Space between label and input */
+      display: block; /* Make label take its own line */
+      font-weight: 500;
+    }
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 14px 18px; /* More padding for better feel */
+      border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle light border */
+      border-radius: var(--border-radius-medium); /* Consistent rounded corners */
+      font-size: 1rem; /* Slightly larger font */
+      background-color: rgba(255, 255, 255, 0.05); /* Very subtle transparent white fill */
+      color: var(--text-color-light); /* Input text color */
+      outline: none; /* Remove default outline */
+      transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    }
+    input[type="email"]::placeholder, input[type="password"]::placeholder {
+      color: rgba(255, 255, 255, 0.4); /* Lighter placeholder text */
+    }
+    input[type="email"]:focus, input[type="password"]:focus {
+      border-color: var(--primary-color); /* Teal border on focus */
+      box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.3); /* Teal glow on focus */
+    }
+    .options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem; /* Adjusted font size */
+      margin-bottom: 25px; /* More space below options */
+      width: 100%;
+      color: var(--text-color-dark);
+    }
+    .options label input[type="checkbox"] {
+      margin-right: 8px;
+      accent-color: var(--primary-color); /* Teal checkbox */
+    }
+    .options a {
+      color: var(--primary-color); /* Teal link color */
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition-speed) ease;
+    }
+    .options a:hover {
+      color: var(--secondary-color); /* Orange on hover */
+    }
+
+    .btn {
+      background-color: var(--primary-color); /* Teal button */
+      border: none;
+      color: white;
+      padding: 15px 25px; /* More padding */
+      width: 100%;
+      border-radius: var(--border-radius-medium); /* Consistent rounded corners */
+      font-size: 1.1rem; /* Larger font */
+      cursor: pointer;
+      margin-bottom: 15px;
+      transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      font-family: 'Bebas Neue', sans-serif; /* Bebas Neue for buttons */
+      letter-spacing: 0.8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Shadow for buttons */
+    }
+    .btn:hover {
+      background-color: var(--secondary-color); /* Orange on hover */
+      transform: translateY(-2px); /* Slight lift */
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    }
+    .btn-google {
+      background-color: #2a2a2a; /* Darker background for Google button */
+      border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+      color: var(--text-color-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px; /* Increased gap */
+      padding: 15px 25px; /* Consistent padding */
+      width: 100%;
+      border-radius: var(--border-radius-medium);
+      cursor: pointer;
+      font-size: 1.05rem; /* Slightly smaller than main button */
+      transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Shadow */
+    }
+    .btn-google:hover {
+      background-color: rgba(255, 255, 255, 0.1); /* Lighter transparent on hover */
+      border-color: var(--primary-color); /* Teal border on hover */
+      transform: translateY(-2px);
+    }
+    .btn-google img {
+      filter: invert(1); /* Invert Google logo for dark background readability if needed, depends on actual logo */
+      height: 20px; /* Maintain height */
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.9rem; /* Adjusted font size */
+      margin-top: 30px; /* More space from buttons */
+      color: var(--text-color-dark);
+    }
+    .footer a {
+      color: var(--secondary-color); /* Orange link for signup */
+      text-decoration: none;
+      font-weight: 600; /* Bolder for emphasis */
+      transition: color var(--transition-speed) ease;
+    }
+    .footer a:hover {
+      color: var(--primary-color); /* Teal on hover */
+    }
+    .right {
+      flex: 1;
+      /* Updated with a relevant, high-quality placeholder image */
+      background: url('../assets/spid.png') center center/cover no-repeat;
+      min-height: 300px; /* Ensure image section has height on smaller screens if flex-basis becomes small */
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px; /* Add some padding around the container on smaller screens */
+        align-items: flex-start; /* Align container to top on mobile */
+      }
+      .container {
+        flex-direction: column; /* Stack sections vertically */
+        width: 100%; /* Take full width */
+        max-width: 500px; /* Limit width for stacked view */
+        min-height: auto; /* Allow height to adjust */
+      }
+      .left {
+        padding: 30px 25px; /* Adjust padding for mobile */
+      }
+      .left h1 {
+        font-size: 2.2rem; /* Smaller heading on mobile */
+      }
+      .left p {
+        font-size: 0.9rem;
+      }
+      .right {
+        min-height: 200px; /* Smaller image height on mobile */
+        height: 200px; /* Fixed height for consistency */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .left {
+        padding: 25px 20px;
+      }
+      .left h1 {
+        font-size: 1.8rem;
+      }
+      .btn, .btn-google {
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+      .options, .footer {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <h1>REDORA</h1>
+      <p>Welcome back! Let's get you signed in..</p>
+      <form id="loginForm"> <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required/>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Password" required/>
+        </div>
+
+        <button type="submit" class="btn">Sign In</button>
+      </form>
+      <div class="footer">
+        Don’t have an account? <a href="/pages/signup.html">Sign up for free!</a> </div>
+    </div>
+    <div class="right"></div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            // --- MODIFICATION 1: Changed API endpoint to /api/login ---
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Login successful, redirect to home.html as specified by the server
+
+                window.location.href = data.redirect || '/pages/home.html';
+            } else {
+                // Login failed, show error message
+                alert('Login failed: ' + data.message); // Show error message from server
+            }
+        } catch (error) {
+            console.error('Error during login fetch:', error);
+            alert('An error occurred. Please try again later.');
+        }
+    });
+
+    // Optional: Make Google button not submit the form
+    document.querySelector('.btn-google').addEventListener('click', function(event) {
+      alert('Google Sign-in not yet implemented.');
+    });
+  </script>
+</body>
+</html>

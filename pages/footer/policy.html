@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy - REDORA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* Custom CSS variables for theme consistency - Copied from index.html */
+        :root {
+            --primary-color: #008080; /* Teal */
+            --secondary-color: #FFA500; /* Orange */
+            --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+            --text-color-dark: #ccc; /* Light grey for text on black sections */
+            --button-bg: rgba(255, 255, 255, 0.1); /* Light transparent background for buttons */
+            --button-border: rgba(255, 255, 255, 0.2); /* Subtle border for buttons */
+            --button-hover-bg: rgba(255, 165, 0, 0.3); /* Orange transparent on hover */
+            --button-hover-border: rgba(255, 165, 0, 0.5); /* Slightly stronger orange border on hover */
+            --transition-speed: 0.3s;
+            --border-radius-medium: 0.75rem;
+            --card-shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.5);
+            --section-bg-dark: rgba(0, 0, 0, 0.8); /* Dark, slightly transparent background for sections */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #000; /* Black background */
+            color: var(--text-color-light); /* Default text color on black */
+            text-align: center;
+        }
+
+        body.nav-open-body {
+            overflow: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--secondary-color); /* Orange headings for contrast */
+            letter-spacing: 1px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color-light);
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1001;
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        header .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        header .logo:hover {
+            color: var(--primary-color);
+        }
+
+        header .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+
+        .nav-toggle-button, #searchIconButton {
+            background-color: var(--button-bg);
+            color: var(--text-color-light);
+            border: 1px solid var(--button-border);
+            padding: 10px 15px;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        .nav-toggle-button:hover, #searchIconButton:hover {
+            background-color: var(--button-hover-bg);
+            border-color: var(--button-hover-border);
+            color: white;
+        }
+
+        #main-nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.7);
+            z-index: 1050;
+            transform: translateX(100%);
+            transition: transform var(--transition-speed) ease-in-out;
+            padding-top: 6rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #main-nav.active {
+            transform: translateX(0);
+        }
+
+        #main-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        #main-nav ul li {
+            width: 100%;
+        }
+
+        #main-nav ul li a {
+            display: block;
+            padding: 1.2rem 2rem;
+            color: var(--text-color-light);
+            text-decoration: none;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            text-align: left;
+        }
+
+        #main-nav ul li a:hover {
+            background-color: var(--button-hover-bg);
+            color: var(--secondary-color);
+        }
+
+        .close-nav-button {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-color-light);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1060;
+        }
+        .close-nav-button:hover {
+            color: var(--secondary-color);
+            transform: rotate(90deg);
+        }
+
+        #nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1040;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+        }
+
+        #nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Content Area Specific Styles */
+        .content-section {
+            background-color: var(--section-bg-dark);
+            color: var(--text-color-dark);
+            padding: 4rem 2rem;
+            width: 100%;
+            max-width: 900px; /* Adjust max-width for readability */
+            margin-top: 80px; /* Space below fixed header */
+            margin-bottom: 40px;
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            text-align: left; /* Align text left for policy content */
+            box-sizing: border-box;
+        }
+
+        .content-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+
+        .content-section h3 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary-color);
+        }
+
+        .content-section p, .content-section ul, .content-section ol {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            color: var(--text-color-dark);
+        }
+
+        .content-section ul, .content-section ol {
+            padding-left: 20px;
+        }
+
+        .content-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #222;
+            color: var(--text-color-dark);
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto; /* Push footer to the bottom */
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsive Adjustments for content section */
+        @media (max-width: 768px) {
+            .content-section {
+                padding: 3rem 1.5rem;
+                margin-top: 100px;
+            }
+            .content-section h2 {
+                font-size: 2rem;
+            }
+            .content-section h3 {
+                font-size: 1.5rem;
+            }
+            .back-button {
+                left: 10px;
+                font-size: 1.3rem;
+            }
+            header .logo {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-section {
+                padding: 2rem 1rem;
+                margin-top: 90px;
+            }
+            .content-section h2 {
+                font-size: 1.8rem;
+            }
+            .content-section h3 {
+                font-size: 1.3rem;
+            }
+            .content-section p, .content-section ul, .content-section ol {
+                font-size: 0.9rem;
+            }
+            .back-button {
+                left: 5px;
+                font-size: 1.1rem;
+            }
+            header .logo {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/home.html" class="back-button" title="Back to Home">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <a href="#" class="logo">Redora</a>
+    </header>
+
+    <main class="content-section">
+        <h2>Privacy Policy</h2>
+        <p><em>Last updated: July 2, 2025</em></p>
+
+        <h3>1. Introduction</h3>
+        <p>Welcome to REDORA. This Privacy Policy describes how we collect, use, and disclose your personal information when you use our website and services.</p>
+
+        <h3>2. Information We Collect</h3>
+        <ul>
+            <li><strong>Personal Information:</strong> We may collect personal information that you voluntarily provide to us when you register on the site, write stories, or interact with other users. This may include your name, email address, profile picture, and any other information you choose to provide in your profile or stories.</li>
+            <li><strong>Usage Data:</strong> We automatically collect information about how you access and use the Service, such as your IP address, browser type, device information, pages visited, and the time and date of your visit.</li>
+            <li><strong>Content Data:</strong> We collect the stories, comments, and other content you post on REDORA .</li>
+        </ul>
+
+        <h3>3. How We Use Your Information</h3>
+        <p>We use the collected information for various purposes, including:</p>
+        <ul>
+            <li>To provide, maintain, and improve our services.</li>
+            <li>To personalize your experience and deliver content and features relevant to your interests.</li>
+            <li>To allow you to participate in interactive features of our Service when you choose to do so.</li>
+            <li>To provide customer support.</li>
+            <li>To detect, prevent, and address technical issues.</li>
+            <li>To monitor the usage of our Service.</li>
+        </ul>
+
+        <h3>4. Sharing Your Information</h3>
+        <p>We may share your information in the following situations:</p>
+        <ul>
+            <li><strong>With Other Users:</strong> Content you publish (stories, comments, profile information you make public) will be visible to other users.</li>
+            <li><strong>With Service Providers:</strong> We may employ third-party companies and individuals to facilitate our Service (e.g., hosting, analytics). These third parties have access to your Personal Information only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.</li>
+            <li><strong>For Legal Reasons:</strong> We may disclose your Personal Information in the good faith belief that such action is necessary to comply with a legal obligation, protect and defend the rights or property of REDORA, prevent or investigate possible wrongdoing in connection with the Service, or protect the personal safety of users of the Service or the public.</li>
+        </ul>
+
+        <h3>5. Data Security</h3>
+        <p>We strive to use commercially acceptable means to protect your Personal Information. However, no method of transmission over the Internet or method of electronic storage is 100% secure. Therefore, we cannot guarantee its absolute security.</p>
+
+        <h3>6. Your Data Protection Rights</h3>
+        <p>Depending on your location, you may have the following data protection rights:</p>
+        <ul>
+            <li>The right to access, update or delete the information we have on you.</li>
+            <li>The right of rectification.</li>
+            <li>The right to object.</li>
+            <li>The right of restriction.</li>
+            <li>The right to data portability.</li>
+            <li>The right to withdraw consent.</li>
+        </ul>
+        <p>Please contact us to exercise any of these rights.</p>
+
+        <h3>7. Links to Other Sites</h3>
+        <p>Our Service may contain links to other sites that are not operated by us. If you click on a third-party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit.</p>
+
+        <h3>8. Changes to This Privacy Policy</h3>
+        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+
+        <h3>9. Contact Us</h3>
+        <p>If you have any questions about this Privacy Policy, please contact us at <div redora@gmail.com=""></div>.</p>
+    </main>
+</body>
+</html>
