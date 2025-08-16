@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monthly Story Prompt</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #fef6e4;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+      color: #333;
+    }
+    h1 {
+      color: #ff8906;
+    }
+    .story-container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 This Month's Story Beginning</h1>
+  <div class="story-container" id="storyContainer">
+    Loading story...
+  </div>
+
+  <script>
+    fetch("http://localhost:3000/current-story")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("storyContainer").innerHTML = `
+          <strong>${data.month}</strong><br/><br/>
+          ${data.prompt}
+        `;
+      })
+      .catch(err => {
+        document.getElementById("storyContainer").innerText = "Failed to load story.";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
+//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

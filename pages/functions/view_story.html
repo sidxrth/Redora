@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Story - REDORA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* Custom CSS variables - Reverted to old color scheme */
+        :root {
+            --primary-color: #008080; /* Teal */
+            --secondary-color: #FFA500; /* Orange */
+            --text-color-light: #F0F0F0; /* Light grey */
+            --text-color-dark: #AAAAAA; /* Grey */
+            --section-bg-dark: rgba(0, 0, 0, 0.8); /* Dark transparent for sections */
+            --card-shadow-dark: 0 4px 15px rgba(0, 0, 0, 0.5); /* Darker shadow */
+            --border-radius-medium: 0.75rem;
+            --transition-speed: 0.3s;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #000; /* Black background */
+            color: var(--text-color-light); /* Light text on dark background */
+            text-align: center;
+        }
+
+        /* Headings general style */
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif; /* Reverted to Bebas Neue for general headings */
+            color: var(--primary-color); /* Teal headings */
+            letter-spacing: 1px;
+        }
+
+        /* Header - Reverted colors, kept structure */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Dark transparent */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center; /* Changed to center to make space for back button */
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Darker shadow */
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            position: absolute; /* Positioned absolutely within the header */
+            left: 20px; /* Aligned to the left */
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color-light);
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1001; /* Ensure it's above the logo if needed */
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        header .logo {
+           font-family: 'Bebas Neue', sans-serif; /* Explicitly set for logo */
+            font-size: 2rem;
+            font-weight: 800; /* Matches about.html's implied boldness */
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+            flex-grow: 1; /* Allows logo to take available space */
+            text-align: center; /* Center the logo text */
+        }
+
+        header .logo:hover {
+            color: var(--primary-color); /* Teal on hover */
+        }
+
+        .header-spacer {
+            height: 100px;
+            width: 100%;
+        }
+
+        /* Story Container */
+        .story-view-container {
+            background-color: transparent; /* Changed to transparent for the content box */
+            border-radius: var(--border-radius-medium);
+            box-shadow: none; /* Removed shadow */
+            padding: 2.5rem; /* Adjusted padding */
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+            max-width: 900px;
+            width: 90%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column; /* Kept column for content flow */
+            align-items: flex-start; /* Aligned items to the start (left) by default for most content */
+            position: relative; /* Needed for absolute positioning of author info and back link */
+            color: var(--text-color-light); /* Light text color for dark background */
+        }
+
+        /* Story Title */
+        .story-view-container h1 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 1.5rem; /* Adjusted margin */
+            color: var(--text-color-light); /* Changed to light text color */
+            text-align: left;
+            width: 100%;
+        }
+
+        /* Story Image */
+        .story-image {
+            width: 100%;
+            max-width: 700px; /* Adjusted max-width */
+            height: 350px; /* Adjusted height */
+            object-fit: cover;
+            border-radius: var(--border-radius-medium);
+            margin-bottom: 2rem;
+            align-self: center; /* Center the image */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Added subtle shadow to image */
+        }
+
+        /* Author Info */
+.author-info {
+    display: flex;
+    flex-direction: row;              /* keep profile on left, name on right */
+    align-items: center;
+    justify-content: flex-end;        /* push content to the right */
+    text-align: right;                /* align text inside to the right */
+    gap: 12px;
+    padding: 15px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    width: 100%;                      /* full width of parent */
+    box-sizing: border-box;
+    margin: 1.5rem 0 2rem;
+}
+
+
+        .author-info .profile-picture {
+            width: 60px; /* Increased size */
+            height: 60px; /* Increased size */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color); /* Teal border for dark theme */
+        }
+
+        .author-info .username {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem; /* Increased font size */
+            font-weight: 500;
+            color: var(--secondary-color); /* Orange for username */
+            margin: 0;
+            cursor: pointer;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .author-info .username:hover {
+            color: var(--primary-color); /* Teal on hover */
+        }
+
+        /* story-content */
+.story-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-color-light);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word; /* <-- add this */
+    text-align: left;
+     word-break: break-word;        /* Force long words to break */
+    overflow-wrap: anywhere;       /* Break extremely long strings */
+    max-width: 100%;  
+    padding: 0;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+    max-width: 100%;           /* <-- add this */
+    box-sizing: border-box;    /* <-- ensure padding doesn’t break layout */
+}
+
+
+        /* Back to Posts Link - REMOVED */
+        .back-to-posts-link {
+            display: none; /* Hide the button */
+        }
+
+        .loading-message, .error-message {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            text-align: center;
+            width: 100%;
+            color: var(--primary-color); /* Consistent with the theme */
+        }
+        .loading-message {
+            color: var(--primary-color); /* Use primary color */
+        }
+        .error-message {
+            color: #ff4d4d;
+        }
+
+        /* Like and Comment Section */
+        .story-actions {
+            display: flex;
+            justify-content: flex-start; /* Align to start */
+            gap: 20px;
+            margin-top: 1.5rem; /* Adjusted margin-top to be below author-info */
+            width: 100%;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .like-button, .comment-button {
+            background-color: transparent;
+            color: var(--text-color-light);
+            border: 1px solid var(--primary-color);
+            padding: 10px 20px;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+        }
+
+        .like-button:hover, .comment-button:hover {
+            background-color: var(--primary-color);
+            color: #000;
+        }
+
+        .like-button.liked {
+            background-color: var(--primary-color);
+            color: #000;
+            border-color: var(--primary-color);
+        }
+
+        .like-button i, .comment-button i {
+            font-size: 1.1rem;
+        }
+
+        .like-count {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        /* Comments Section Styling */
+        .comments-section {
+            width: 100%;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .comments-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color-light);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            box-sizing: border-box;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .comment-form button {
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color var(--transition-speed) ease;
+            align-self: flex-end;
+        }
+
+        .comment-form button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .comment-item {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 1rem;
+            border-radius: var(--border-radius-medium);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .comment-item .comment-author-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .comment-item .comment-content-wrapper {
+            flex-grow: 1;
+        }
+
+        .comment-item .comment-author-name {
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .comment-item .comment-text {
+            font-size: 0.95rem;
+            color: var(--text-color-light);
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .comment-item .comment-timestamp {
+            font-size: 0.8rem;
+            color: var(--text-color-dark);
+            margin-top: 5px;
+        }
+
+        /* No Comments Message */
+        .no-comments-message {
+            color: var(--text-color-dark);
+            font-style: italic;
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+
+
+        /* Footer - Reverted colors, kept structure */
+        footer {
+            width: 100%;
+            background-color: #222; /* Reverted to dark grey */
+            color: var(--text-color-dark); /* Reverted to dark grey text */
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto;
+            border-top: none; /* Removed border */
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-color-dark); /* Reverted to dark grey for footer links */
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color); /* Reverted to Teal on hover */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            .back-button {
+                left: 10px;
+                font-size: 1.3rem;
+            }
+            header .logo {
+                font-size: 1.8rem;
+            }
+            .story-view-container {
+                padding: 2rem 1.5rem;
+                width: 95%;
+            }
+            .story-view-container h1 {
+                font-size: 2rem;
+            }
+            .story-image {
+                max-height: 300px;
+            }
+            .author-info {
+                margin: 1rem 0 1.5rem;
+                padding: 10px 15px; /* Adjusted padding for medium screens */
+                gap: 8px;
+            }
+            .author-info .profile-picture {
+                width: 50px; /* Adjusted size for medium screens */
+                height: 50px;
+            }
+            .author-info .username {
+                font-size: 1.1rem; /* Adjusted size for medium screens */
+            }
+            .story-content {
+                font-size: 1rem;
+                padding: 0;
+            }
+            .story-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0.8rem;
+            }
+            .back-button {
+                left: 5px;
+                font-size: 1.1rem;
+            }
+            header .logo {
+                font-size: 1.6rem;
+            }
+            .story-view-container {
+                padding: 1.5rem 1rem;
+            }
+            .story-view-container h1 {
+                font-size: 1.6rem;
+            }
+            .story-image {
+                max-height: 200px;
+            }
+            .author-info {
+                margin: 0.8rem 0 1rem;
+                flex-direction: row;
+                text-align: left;
+                padding: 8px 12px; /* Adjusted padding for small screens */
+            }
+            .author-info .profile-picture {
+                width: 40px; /* Adjusted size for small screens */
+                height: 40px;
+            }
+            .author-info .username {
+                font-size: 1rem; /* Adjusted size for small screens */
+            }
+            .story-content {
+                font-size: 0.9rem;
+            }
+            .comment-form {
+                padding: 1rem;
+            }
+            .comments-section h2 {
+                font-size: 1.5rem;
+            }
+            .comment-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .comment-item .comment-author-name {
+                margin-bottom: 2px;
+            }
+            .comment-item .comment-timestamp {
+                margin-top: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+<a href="javascript:history.back()" class="back-button" title="Go Back">
+    <i class="fas fa-arrow-left"></i>
+</a>
+
+        <a href="#" class="logo">REDORA</a>
+    </header>
+
+    <div class="header-spacer"></div>
+
+    <main class="story-view-container">
+        <p class="loading-message" id="story-status-message">Loading story...</p>
+        <div id="story-content-display" style="display: none;">
+            <h1 id="story-title"></h1>
+            <img id="story-image" src="" alt="Story Image" class="story-image">
+
+            <p class="story-content" id="full-story-content"></p>
+
+            <div class="author-info">
+                <img id="author-profile-picture" src="https://via.placeholder.com/60/008080/FFFFFF?text=U" alt="Author Profile Picture" class="profile-picture">
+                <p class="username" id="author-username"></p>
+            </div>
+
+            <div class="story-actions">
+                <button id="like-button" class="like-button">
+                    <i class="far fa-thumbs-up"></i> <span id="like-count">0</span> Likes
+                </button>
+                <button id="comment-button" class="comment-button">
+                    <i class="far fa-comment"></i>
+                    View Comments
+                </button>
+            </div>
+
+            <div class="comments-section">
+                <h2>Comments</h2>
+                <div class="comment-form">
+                    <textarea id="comment-textarea" placeholder="Write your comment here..."></textarea>
+                    <button id="submit-comment-button">Post Comment</button>
+                </div>
+                <div id="comment-list" class="comment-list">
+                    <p class="no-comments-message" id="no-comments-message" style="display: none;">No comments yet. Be the first to comment!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+ <footer>
+        <p>&copy; 2025 Redora. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/pages/footer/aboutdev.html">About Us</a>
+            <a href="/pages/footer/policy.html">Privacy Policy</a>
+            <a href="/pages/footer/terms.html">Terms of Service</a>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storyId = urlParams.get('storyId');
+
+            const storyStatusMessage = document.getElementById('story-status-message');
+            const storyContentDisplay = document.getElementById('story-content-display');
+            const storyTitleElem = document.getElementById('story-title');
+            const storyImageElem = document.getElementById('story-image');
+            const authorProfilePictureElem = document.getElementById('author-profile-picture');
+            const authorUsernameElem = document.getElementById('author-username');
+            const fullStoryContentElem = document.getElementById('full-story-content');
+            const likeButton = document.getElementById('like-button');
+            const likeCountSpan = document.getElementById('like-count');
+            const commentButton = document.getElementById('comment-button');
+            const commentTextarea = document.getElementById('comment-textarea');
+            const submitCommentButton = document.getElementById('submit-comment-button');
+            const commentListDiv = document.getElementById('comment-list');
+            const noCommentsMessage = document.getElementById('no-comments-message');
+
+            let currentStoryData = null; // Store fetched story data globally for this script
+
+            if (!storyId) {
+                storyStatusMessage.textContent = 'Error: Story ID not provided.';
+                storyStatusMessage.classList.add('error-message');
+                return;
+            }
+
+            // Function to update like button state
+            const updateLikeButton = (isLiked, likeCount) => {
+                if (isLiked) {
+                    likeButton.classList.add('liked');
+                    likeButton.querySelector('i').classList.remove('far');
+                    likeButton.querySelector('i').classList.add('fas');
+                } else {
+                    likeButton.classList.remove('liked');
+                    likeButton.querySelector('i').classList.remove('fas');
+                    likeButton.querySelector('i').classList.add('far');
+                }
+                likeCountSpan.textContent = likeCount;
+            };
+
+            // Function to fetch and display comments
+            const fetchComments = async () => {
+                try {
+                    const response = await fetch(`/api/story/${storyId}/comments`);
+                    const comments = await response.json();
+
+                    commentListDiv.innerHTML = ''; // Clear existing comments
+
+                    if (comments.length === 0) {
+                        noCommentsMessage.style.display = 'block';
+                    } else {
+                        noCommentsMessage.style.display = 'none';
+                        comments.forEach(comment => {
+                            const commentItem = document.createElement('div');
+                            commentItem.classList.add('comment-item');
+                            commentItem.innerHTML = `
+                                <img src="${comment.authorProfileImageURL || 'https://via.placeholder.com/40/008080/FFFFFF?text=U'}" alt="${comment.authorFullName}'s profile picture" class="comment-author-pic">
+                                <div class="comment-content-wrapper">
+                                    <p class="comment-author-name" data-user-id="${comment.userId}">${comment.authorFullName}</p>
+                                    <p class="comment-text">${comment.commentText}</p>
+                                    <p class="comment-timestamp">${new Date(comment.timestamp).toLocaleString()}</p>
+                                </div>
+                            `;
+                            commentListDiv.appendChild(commentItem);
+
+                            // Add click event for author name to navigate to other user's page
+                            commentItem.querySelector('.comment-author-name').addEventListener('click', (event) => {
+                                const userId = event.target.dataset.userId;
+                                if (userId) {
+                                    window.location.href = `/pages/other.html?userId=${userId}`;
+                                }
+                            });
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error fetching comments:', error);
+                    commentListDiv.innerHTML = '<p class="error-message">Failed to load comments.</p>';
+                }
+            };
+
+            // Fetch story details
+            try {
+                const response = await fetch(`/api/story/${storyId}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    storyStatusMessage.style.display = 'none';
+                    storyContentDisplay.style.display = 'block';
+
+                    currentStoryData = data; // Save story data
+
+                    storyTitleElem.textContent = data.storyTitle;
+                    storyImageElem.src = data.image || 'https://placehold.co/700x350/CCCCCC/666666?text=Story Image';
+                    fullStoryContentElem.textContent = data.fullStoryContent;
+
+                    authorProfilePictureElem.src = data.authorProfileImageURL || 'https://via.placeholder.com/60/008080/FFFFFF?text=U';
+                    authorUsernameElem.textContent = `By ${data.authorFullName}`;
+
+                    authorUsernameElem.style.cursor = 'pointer';
+                    authorUsernameElem.onclick = () => {
+                        window.location.href = `/pages/other.html?userId=${data.userId}`;
+                    };
+
+                    // Initialize like button state and count
+                    updateLikeButton(data.isLikedByCurrentUser, data.likeCount);
+
+                    // Fetch and display comments
+                    fetchComments();
+
+                    // Set up comment button link (though now comments are inline)
+                    // You might want to remove this button or change its functionality
+                    commentButton.onclick = () => {
+                        // Optionally scroll to comments section or toggle its visibility
+                        document.querySelector('.comments-section').scrollIntoView({ behavior: 'smooth' });
+                    };
+
+                } else {
+                    storyStatusMessage.textContent = `Error: ${data.message || 'Could not fetch story data.'}`;
+                    storyStatusMessage.classList.add('error-message');
+                    console.error('Failed to fetch story:', data.message);
+                }
+            } catch (error) {
+                storyStatusMessage.textContent = `An unexpected error occurred: ${error.message}`;
+                storyStatusMessage.classList.add('error-message');
+                console.error('Network or parsing error:', error);
+            }
+
+            // Like button click handler
+            likeButton.addEventListener('click', async () => {
+                if (!currentStoryData) return; // Ensure story data is loaded
+
+                const isCurrentlyLiked = likeButton.classList.contains('liked');
+                const endpoint = isCurrentlyLiked ? `/api/unlike/${storyId}` : `/api/like/${storyId}`;
+
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // Update UI based on new status and count
+                        updateLikeButton(data.isLikedByCurrentUser, data.likeCount);
+                    } else {
+                        alert(`Error: ${data.message || 'Failed to update like status.'}`);
+                        console.error('Like/Unlike API Error:', data.message);
+                    }
+                } catch (error) {
+                    alert('An error occurred while updating like status.');
+                    console.error('Network error during like/unlike:', error);
+                }
+            });
+
+            // Submit comment button handler
+            submitCommentButton.addEventListener('click', async () => {
+                const commentText = commentTextarea.value.trim();
+                if (!commentText) {
+                    alert('Comment cannot be empty.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/api/story/${storyId}/comment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ commentText })
+                    });
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        commentTextarea.value = ''; // Clear textarea
+                        fetchComments(); // Refresh comments
+                    } else {
+                        alert(`Error: ${data.message || 'Failed to post comment.'}`);
+                        console.error('Comment API Error:', data.message);
+                    }
+                } catch (error) {
+                    alert('An error occurred while posting your comment.');
+                    console.error('Network error during comment post:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

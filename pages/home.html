@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>REDORA - Explore Narratives</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* Custom CSS variables for theme consistency */
+        :root {
+            --primary-color: #008080; /* Teal */
+            --secondary-color: #FFA500; /* Orange */
+            --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+            --text-color-dark: #ccc; /* Light grey for text on black sections */
+            --button-bg: rgba(255, 255, 255, 0.1); /* Light transparent background for buttons */
+            --button-border: rgba(255, 255, 255, 0.2); /* Subtle border for buttons */
+            --button-hover-bg: rgba(255, 165, 0, 0.3); /* Orange transparent on hover */
+            --button-hover-border: rgba(255, 165, 0, 0.5); /* Slightly stronger orange border on hover */
+            --transition-speed: 0.3s;
+            --border-radius-medium: 0.75rem;
+            --card-shadow-dark: 0 4px 10px rgba(0, 0, 0, 0.5);
+            --section-bg-dark: rgba(0, 0, 0, 0.8); /* Dark, slightly transparent background for sections */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #000; /* Black background */
+            color: var(--text-color-light); /* Default text color on black */
+            text-align: center;
+        }
+
+        /* Class to prevent scrolling when navigation is open */
+        body.nav-open-body {
+            overflow: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--secondary-color); /* Orange headings for contrast */
+            letter-spacing: 1px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Dark semi-transparent nav */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            box-sizing: border-box;
+        }
+
+        /* Modified: Added specific styles for the logo for consistency with about.html */
+        header .logo {
+            font-family: 'Bebas Neue', sans-serif; /* Explicitly set for logo */
+            font-size: 2rem;
+            font-weight: 800; /* Matches about.html's implied boldness */
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+            flex-grow: 1; /* Allows logo to take available space */
+            text-align: center; /* Center the logo text */
+            margin-left: 7.5rem;
+        }
+
+        header .logo:hover {
+            color: var(--primary-color);
+        }
+
+        /* Right Section for Nav and Search */
+        header .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Spacing between search and nav elements */
+            flex-shrink: 1;
+            min-width: 0;
+        }
+
+        /* Navigation Toggle Button Styling */
+        .nav-toggle-button {
+            background-color: var(--button-bg);
+            color: var(--text-color-light);
+            border: 1px solid var(--button-border);
+            padding: 10px 15px;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        .nav-toggle-button:hover {
+            background-color: var(--button-hover-bg);
+            border-color: var(--button-hover-border);
+            color: white;
+        }
+
+        /* NEW: Search Icon Button Styling */
+        #searchIconButton {
+            background-color: var(--button-bg);
+            color: var(--text-color-light);
+            border: 1px solid var(--button-border);
+            padding: 10px 15px;
+            border-radius: var(--border-radius-medium);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        #searchIconButton:hover {
+            background-color: var(--button-hover-bg);
+            border-color: var(--button-hover-border);
+            color: white;
+        }
+
+
+        /* --- Main Navigation Styles --- */
+        #main-nav {
+            position: fixed;
+            top: 0;
+            right: 0; /* Start off-screen */
+            width: 280px; /* Width of the navigation sidebar */
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); /* Darker, more opaque background */
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.7);
+            z-index: 1050; /* Above header */
+            transform: translateX(100%); /* Initially hide it off-screen */
+            transition: transform var(--transition-speed) ease-in-out;
+            padding-top: 6rem; /* Space for content below top */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #main-nav.active {
+            transform: translateX(0); /* Slide into view */
+        }
+
+        #main-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+        }
+
+        #main-nav ul li {
+            width: 100%;
+        }
+
+        #main-nav ul li a {
+            display: block;
+            padding: 1.2rem 2rem;
+            color: var(--text-color-light);
+            text-decoration: none;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+            text-align: left;
+        }
+
+        #main-nav ul li a:hover {
+            background-color: var(--button-hover-bg);
+            color: var(--secondary-color);
+        }
+
+        /* Close button for navigation */
+        .close-nav-button {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-color-light);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1060;
+        }
+        .close-nav-button:hover {
+            color: var(--secondary-color);
+            transform: rotate(90deg);
+        }
+
+        /* Overlay for when navigation is open */
+        #nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black overlay */
+            z-index: 1040; /* Between content and navigation */
+            opacity: 0; /* Initially hidden */
+            visibility: hidden;
+            transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+        }
+
+        #nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        /* Header Story Box */
+        .header-story-box {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px 40px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin-top: 80px; /* Space below fixed header */
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--card-shadow-dark);
+            font-size: 1.6rem;
+            font-style: italic;
+            color: var(--text-color-light);
+            line-height: 1.5;
+            text-align: center;
+            position: relative; /* IMPORTANT: Needed for absolute positioning of the icon */
+        }
+        .header-story-box p {
+            margin: 0;
+        }
+
+        /* Styles for the new month/year heading */
+        .header-story-box h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: var(--primary-color); /* Use primary color for the month heading */
+            font-size: 1.8rem;
+        }
+
+        /* NEW: Write Story Icon inside header-story-box */
+        .write-story-icon {
+            position: absolute;
+            bottom: 10px; /* Distance from bottom */
+            right: 10px; /* Distance from right */
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%; /* Make it circular */
+            width: 40px; /* Size of the circle */
+            height: 40px; /* Size of the circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            text-decoration: none; /* Remove underline for the link */
+        }
+
+        .write-story-icon:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+
+
+        /* Stories Section */
+        #stories {
+            background-color: var(--section-bg-dark);
+            color: var(--text-color-dark);
+            padding: 4rem 2rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #stories h2 {
+            font-size: 3rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        /* Removed original .write-story-btn styles */
+
+
+        .stories-grid {
+            display: flex; /* Changed from grid to flex */
+            flex-wrap: wrap; /* Allows items to wrap to next line */
+            justify-content: center; /* Centers items horizontally */
+            gap: 2.5rem; /* Keep the gap for spacing between flex items */
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-bottom: 2rem;
+            /* Removed grid-template-columns specific properties */
+        }
+
+        .story-card {
+            background-color: #111;
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            overflow: hidden;
+            text-align: left;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            display: flex;
+            flex-direction: column;
+            width: 300px; /* Set a fixed width for flex items to prevent stretching */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .story-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .story-card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .story-card h3 {
+            font-size: 1.6rem;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .story-card .author {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+        }
+
+        .story-card .excerpt {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: var(--text-color-dark);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .read-more {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: var(--border-radius-medium);
+            text-decoration: none;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+        }
+
+        .read-more:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .view-all-stories-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: var(--border-radius-medium);
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-family: 'Bebas Neue', sans-serif;
+            margin-top: 2rem;
+            display: inline-block;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .view-all-stories-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: #222;
+            color: var(--text-color-dark);
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                padding: 1rem;
+            }
+            header .logo {
+                width: auto;
+                margin-bottom: 0;
+                text-align: left;
+            }
+            header .right-section {
+                width: auto;
+                justify-content: flex-end;
+                flex-wrap: nowrap;
+                margin-left: auto;
+                gap: 10px; /* Adjust gap for smaller screens */
+            }
+            .nav-toggle-button, #searchIconButton { /* Apply styles to both buttons */
+                font-size: 1.1rem;
+                padding: 8px 12px;
+                margin-top: 0;
+            }
+            .header-story-box {
+                font-size: 1.3rem;
+                padding: 20px 30px;
+                margin-top: 100px;
+            }
+            /* Adjusted month heading font size for smaller screens */
+            .header-story-box h3 {
+                font-size: 1.5rem;
+            }
+            /* New icon responsive adjustments */
+            .write-story-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+                bottom: 8px;
+                right: 8px;
+            }
+            #stories {
+                padding: 3rem 1rem;
+            }
+            #stories h2 {
+                font-size: 2.5rem;
+            }
+            .stories-grid {
+                gap: 1.5rem; /* Adjust gap for smaller screens */
+            }
+            .story-card {
+                width: calc(100% - 3rem); /* Adjust width to account for gap on small screens */
+            }
+            /* Main navigation adjustments */
+            #main-nav {
+                width: 250px;
+            }
+            #main-nav ul li a {
+                font-size: 1.3rem;
+                padding: 1rem 1.5rem;
+            }
+            .close-nav-button {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 0.8rem;
+            }
+            header .logo {
+                font-size: 1.6rem;
+            }
+            .nav-toggle-button, #searchIconButton { /* Apply styles to both buttons */
+                font-size: 1rem;
+                padding: 6px 10px;
+                margin-top: 0;
+            }
+            .header-story-box {
+                font-size: 1.1rem;
+                padding: 15px 25px;
+                margin-top: 100px;
+            }
+            /* Adjusted month heading font size for smaller screens */
+            .header-story-box h3 {
+                font-size: 1.2rem;
+            }
+            /* New icon responsive adjustments */
+            .write-story-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+                bottom: 5px;
+                right: 5px;
+            }
+            #stories h2 {
+                font-size: 2rem;
+            }
+            .view-all-stories-btn {
+                font-size: 1rem;
+                padding: 0.8rem 2rem;
+            }
+            /* Main navigation adjustments */
+            #main-nav {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">Redora</a>
+    <div class="right-section">
+        <button id="searchIconButton" aria-label="Search">
+            <i class="fas fa-search"></i>
+        </button>
+        <button class="nav-toggle-button" aria-label="Toggle Navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</header>
+
+
+    <nav id="main-nav">
+        <button class="close-nav-button" aria-label="Close Navigation">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul>
+            <li><a href="/pages/userpage.html" class="nav-link">Profile</a></li>
+            <li><a href="/pages/storywriting.html" class="nav-link">Write Your Story</a></li>
+            <li><a href="/pages/all_stories.html" class="nav-link">Explore Stories</a></li>
+            <li><a href="/logout" class="nav-link">Logout</a></li>
+        </ul>
+    </nav>
+    <div id="nav-overlay"></div>
+
+    <div class="header-story-box">
+        <h3 id="currentMonthYear"></h3>
+        <p id="currentStoryPromptText"></p>
+        <a href="/pages/storywriting.html" class="write-story-icon" title="Write Your Story">
+            <i class="fas fa-pen-nib"></i>
+        </a>
+    </div>
+
+    <section id="stories">
+        <h2>Stories from Your Following Accounts</h2>
+        <div class="stories-grid" id="followedStoriesGrid">
+            <p id="noStoriesMessage" style="color: var(--text-color-dark); margin: 2rem auto; text-align: center; display: none;">No stories found from your following accounts yet. Follow some users to see their stories here!</p>
+        </div>
+        <a href="/pages/all_stories.html" class="view-all-stories-btn">Explore More Stories</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Redora. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="/pages/footer/aboutdev.html">About Us</a>
+            <a href="/pages/footer/policy.html">Privacy Policy</a>
+            <a href="/pages/footer/terms.html">Terms of Service</a>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggleButton = document.querySelector('.nav-toggle-button');
+            const closeNavButton = document.querySelector('.close-nav-button');
+            const mainNav = document.getElementById('main-nav');
+            const navOverlay = document.getElementById('nav-overlay');
+            const body = document.body;
+
+            const searchIconButton = document.getElementById('searchIconButton');
+
+            // Elements for the dynamic story prompt
+            const currentMonthYearElement = document.getElementById('currentMonthYear');
+            const currentStoryPromptTextElement = document.getElementById('currentStoryPromptText');
+
+            // Element for dynamically loading followed stories
+            const followedStoriesGrid = document.getElementById('followedStoriesGrid');
+            const noStoriesMessage = document.getElementById('noStoriesMessage');
+
+            // Function to open the navigation
+            const openNav = () => {
+                mainNav.classList.add('active');
+                navOverlay.classList.add('active');
+                body.classList.add('nav-open-body'); // Add class to body to prevent scrolling
+            };
+
+            // Function to close the navigation
+            const closeNav = () => {
+                mainNav.classList.remove('active');
+                navOverlay.classList.remove('active');
+                body.classList.remove('nav-open-body'); // Remove class from body
+            };
+
+            // Function to redirect to search.html
+            const redirectToSearchPage = () => {
+                window.location.href = '/pages/search.html';
+            };
+
+            // Function to fetch the current story prompt
+            async function fetchCurrentStoryPrompt() {
+                try {
+                    const response = await fetch('/current-story');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    if (data && data.prompt && data.month) {
+                        currentMonthYearElement.textContent = `This Month: ${data.month}`;
+                        currentStoryPromptTextElement.textContent = `"${data.prompt}"`;
+                    } else {
+                        currentMonthYearElement.textContent = `This Month: No Prompt Yet`;
+                        currentStoryPromptTextElement.textContent = "Come back soon for a new story prompt!";
+                        console.warn('Current story prompt data is incomplete or empty.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching current story prompt:', error);
+                    currentMonthYearElement.textContent = `This Month: Story Prompt Unavailable`;
+                    currentStoryPromptTextElement.textContent = "Failed to load the story prompt. Please try again later.";
+                }
+            }
+
+            // NEW: Function to fetch and display stories from followed users
+            async function fetchFollowedStories() {
+                try {
+                    // Corrected endpoint path
+                    const response = await fetch('/api/followed-stories');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const stories = await response.json();
+
+                    followedStoriesGrid.innerHTML = ''; // Clear existing dummy stories
+
+                    if (stories.length === 0) {
+                        noStoriesMessage.style.display = 'block'; // Show message if no stories
+                        followedStoriesGrid.appendChild(noStoriesMessage); // Ensure it's inside the grid
+                    } else {
+                        noStoriesMessage.style.display = 'none'; // Hide message if there are stories
+                        stories.forEach(story => {
+                            // Truncate the content for the excerpt
+                            const excerpt = story.content.length > 150
+                                ? story.content.substring(0, 150) + '...'
+                                : story.content;
+
+                            const storyCard = `
+                                <div class="story-card">
+                                    <img src="${story.coverImage || 'https://placehold.co/300x200/556B2F/FFFFFF?text=Story'}" alt="${story.title}">
+                                    <div class="story-card-content">
+                                        <h3>${story.title}</h3>
+                                        <p class="author">By ${story.authorName}</p>
+                                        <p class="excerpt">${excerpt}</p>
+                                        <a href="/pages/functions/view_story.html?storyId=${story.id}" class="read-more">Read More</a>
+                                    </div>
+                                </div>
+                            `;
+                            followedStoriesGrid.insertAdjacentHTML('beforeend', storyCard);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error fetching followed stories:', error);
+                    followedStoriesGrid.innerHTML = `<p style="color: var(--text-color-dark); margin: 2rem auto; text-align: center;">Failed to load stories from followed accounts. Please try again later.</p>`;
+                }
+            }
+
+
+            // Event listeners for navigation
+            if (navToggleButton) {
+                navToggleButton.addEventListener('click', openNav);
+            }
+
+            if (closeNavButton) {
+                closeNavButton.addEventListener('click', closeNav);
+            }
+
+            if (navOverlay) {
+                navOverlay.addEventListener('click', closeNav); // Close nav when clicking outside (on overlay)
+            }
+
+            // Optional: Close nav when a navigation link is clicked
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', closeNav);
+            });
+
+            // NEW: Event listener for the new search icon button
+            if (searchIconButton) {
+                searchIconButton.addEventListener('click', redirectToSearchPage);
+            }
+
+            // Call the function to fetch and display the prompt when the page loads
+            fetchCurrentStoryPrompt();
+            // NEW: Call the function to fetch and display followed stories when the page loads
+            fetchFollowedStories();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About The Developer - Redora</title>
+    <!-- Google Fonts: Bebas Neue for headings, Inter for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* Custom CSS variables for theme consistency */
+        :root {
+            --primary-color: #008080; /* Teal */
+            --secondary-color: #FFA500; /* Orange */
+            --text-color-light: #f0f0f0; /* Off-white for text on dark bg */
+            --text-color-dark: #ccc; /* Light grey for text on dark sections/cards */
+            --button-hover-bg: rgba(255, 165, 0, 0.3); /* Orange transparent on hover */
+            --transition-speed: 0.3s;
+            --border-radius-medium: 0.75rem; /* Consistent rounded corners */
+            --card-shadow-dark: 0 4px 20px rgba(0, 0, 0, 0.6); /* Deeper shadow for elements */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #000; /* Black background */
+            color: var(--text-color-light); /* Default text color */
+            text-align: center;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--secondary-color); /* Orange headings for contrast */
+            letter-spacing: 1px;
+        }
+
+        /* Header for back button and site logo */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* Dark semi-transparent nav */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between; /* Distribute items */
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            position: absolute; /* Position relative to header */
+            left: 20px; /* Distance from left edge */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Adjust for perfect vertical centering */
+            color: var(--text-color-light);
+            font-size: 1.5rem; /* Icon size */
+            text-decoration: none;
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            z-index: 1001; /* Ensure it's above other header elements if needed */
+        }
+
+        .back-button:hover {
+            color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1); /* Slight grow on hover */
+        }
+
+        header .logo {
+            font-family: 'Bebas Neue', sans-serif; /* Explicitly set for logo */
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-color-light);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+            flex-grow: 1; /* Allows logo to take available space */
+            text-align: center; /* Center the logo text */
+        }
+
+        header .logo:hover {
+            color: var(--primary-color);
+        }
+
+        .header-spacer {
+            height: 80px; /* Space to push content below fixed header */
+            width: 100%;
+        }
+
+        /* Main profile content container */
+        .profile-container {
+            background-color: rgba(0, 0, 0, 0.8); /* Dark transparent background */
+            border-radius: var(--border-radius-medium);
+            box-shadow: var(--card-shadow-dark);
+            padding: 3rem 2rem;
+            margin: 2rem auto; /* Adjusted margin for spacing */
+            max-width: 600px;
+            width: 90%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-picture {
+            width: 220px; /* Increased size */
+            height: 220px; /* Increased size */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color); /* Teal border */
+            box-shadow: 0 0 0 10px rgba(255, 165, 0, 0.3); /* Adjusted glow size */
+            margin-bottom: 2rem; /* Increased margin for larger picture */
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.05);
+        }
+
+        .author-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem; /* Prominent name */
+            color: var(--secondary-color); /* Orange color for name */
+            margin-bottom: 0.5rem;
+            letter-spacing: 1.5px;
+        }
+
+        .author-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-color-dark);
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 25px; /* Space between icons */
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--text-color-light); /* White icon color */
+            font-size: 2.5rem; /* Large icons */
+            transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+            text-decoration: none; /* Remove underline */
+        }
+
+        .social-links a.instagram:hover {
+            color: #E1306C; /* Instagram brand color */
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .social-links a.linkedin:hover {
+            color: #0A66C2; /* LinkedIn brand color */
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        /* Footer for consistency */
+        footer {
+            width: 100%;
+            background-color: #222; /* Consistent dark background for footer */
+            color: var(--text-color-dark);
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: auto; /* Push footer to the bottom */
+        }
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        .footer-links a:hover {
+            color: var(--primary-color); /* Teal on hover */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            .back-button {
+                left: 10px;
+                font-size: 1.3rem;
+            }
+            header .logo {
+                font-size: 1.8rem;
+            }
+            .profile-container {
+                padding: 2rem 1.5rem;
+                width: 95%;
+            }
+            .profile-picture {
+                width: 180px; /* Adjusted size for tablets */
+                height: 180px; /* Adjusted size for tablets */
+                box-shadow: 0 0 0 8px rgba(255, 165, 0, 0.3); /* Adjusted glow size */
+                margin-bottom: 1.5rem; /* Adjusted margin */
+            }
+            .author-name {
+                font-size: 2.5rem;
+            }
+            .author-title {
+                font-size: 1rem;
+            }
+            .social-links {
+                gap: 20px;
+            }
+            .social-links a {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-button {
+                left: 5px;
+                font-size: 1.1rem;
+            }
+            header .logo {
+                font-size: 1.6rem;
+            }
+            .profile-container {
+                padding: 1.5rem 1rem;
+            }
+            .profile-picture {
+                width: 140px; /* Adjusted size for mobile */
+                height: 140px; /* Adjusted size for mobile */
+                box-shadow: 0 0 0 6px rgba(255, 165, 0, 0.3); /* Adjusted glow size */
+                margin-bottom: 1rem; /* Adjusted margin */
+            }
+            .author-name {
+                font-size: 2rem;
+            }
+            .author-title {
+                font-size: 0.9rem;
+            }
+            .social-links {
+                gap: 15px;
+            }
+            .social-links a {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../home.html" class="back-button" title="Back to Home">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <a href="#" class="logo">Redora</a>
+    </header>
+
+    <div class="header-spacer"></div> <!-- Spacer to push content below fixed header -->
+
+    <main class="profile-container">
+        <img src="/assets/devp.jpg" alt="Developer Profile Picture" class="profile-picture">
+        <h1 class="author-name">G S Sidhardh</h1>
+        <p class="author-title">Developer</p>
+
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/sidharth-99018129a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener noreferrer" class="linkedin" title="Visit LinkedIn Profile">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://www.instagram.com/sidxrttt?igsh=MTV5aGo3MXRxajRhcA%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" class="instagram" title="Visit Instagram Profile">
+                <i class="fab fa-instagram"></i>
+            </a>
+            
+        </div>
+    </main>
+
+</body>
+</html>

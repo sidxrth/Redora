@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to PenCraft Haven!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Hide scrollbars */
+            background-color: #000; /* Black background while video loads */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #splash-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100; /* Behind other content */
+            transform: translateX(-50%) translateY(-50%);
+            background-size: cover;
+            filter: brightness(0.8); /* Slightly dim the video for text if needed */
+        }
+
+        .loading-text {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Bebas Neue', sans-serif; /* Using a consistent font */
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+            animation: fadeInOut 2s infinite alternate; /* Subtle loading animation */
+            z-index: 1; /* Above video */
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+    <!-- Optional: Add Bebas Neue font for consistency if needed for loading text -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <!--
+        IMPORTANT: Replace 'path/to/your/video.mp4' with the actual path to your video file.
+        Ideally, place it in an 'assets' folder like './assets/intro_video.mp4'.
+        Ensure the video is short and optimized for web use.
+    -->
+    <video autoplay muted playsinline id="splash-video">
+        <source src="./assets/intro_video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="loading-text">Loading PenCraft Haven...</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('splash-video');
+            const duration = 5000; // 5 seconds in milliseconds
+
+            // Ensure video loads and plays
+            video.oncanplaythrough = () => {
+                video.play().catch(error => {
+                    console.error('Video autoplay prevented:', error);
+                    // Fallback if autoplay is prevented (e.g., mobile devices without user interaction)
+                    // Still proceed to login page after duration
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, duration);
+                });
+            };
+
+            // Set timeout for redirection
+            // This ensures redirection happens even if video doesn't play for full duration
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, duration);
+
+            // Optional: If video is shorter than 5 seconds, ensure it loops or just ends early
+            // If video is longer, it will be cut short by the setTimeout
+            // For a smooth experience, keep the video duration around 5 seconds.
+        });
+    </script>
+</body>
+</html>
