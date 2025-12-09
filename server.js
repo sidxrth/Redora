@@ -36,7 +36,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Session setup
 app.use(
     session({
-        secret: "a_very_strong_and_random_secret_key_for_sessions",
+        secret: process.env.SESSION_SECRET || "a_very_strong_and_random_secret_key_for_sessions",
         resave: false,
         saveUninitialized: false,
         store: new SQLiteStore({
@@ -45,7 +45,7 @@ app.use(
             dir: "./",
         }),
         cookie: {
-            secure: false,
+            secure: false, // Set to true if using HTTPS in production
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24, // 24 hours
         },
@@ -77,7 +77,8 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
 
 // --- Google Gemini API Setup ---
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+// UPDATED: Using 'gemini-2.5-flash' based on your check_models.js output
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 let currentStoryPrompt = {
     month: "",
@@ -121,7 +122,7 @@ async function generateStoryPrompt() {
                     );
                     currentStoryPrompt = {
                         month: currentMonth,
-                        prompt: "Write a story about a hidden portal found in an old library...", // Fallback
+                        prompt: "The old library held a secret behind the dusty map section...", // Fallback
                         dateGenerated: new Date().toISOString(),
                     };
                     return;
@@ -138,7 +139,10 @@ async function generateStoryPrompt() {
                     });
 
                     // Extract text from Gemini response structure
-                    const prompt = response.data.candidates[0].content.parts[0].text.trim();
+                    const prompt = response.data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+                    
+                    if (!prompt) throw new Error("Invalid response format from Gemini");
+
                     const dateGenerated = date.toISOString();
                     
                     currentStoryPrompt = {
@@ -160,7 +164,7 @@ async function generateStoryPrompt() {
                                     "❌ Insert error:",
                                     insertErr.message,
                                 );
-                            else console.log("✅ New prompt saved to DB.");
+                            else console.log("✅ New prompt saved to DB:", prompt);
                         },
                     );
                 } catch (apiErr) {
@@ -170,7 +174,7 @@ async function generateStoryPrompt() {
                     );
                     currentStoryPrompt = {
                         month: currentMonth,
-                        prompt: "The old clock tower hadn't chimed in a century, until the night the green fog rolled in...", // Fallback
+                        prompt: "The old library held a secret behind the dusty map section...", // Fallback
                         dateGenerated: new Date().toISOString(),
                     };
                     console.warn("Using fallback prompt due to API error.");
@@ -542,7 +546,6 @@ app.post("/api/upload-profile-image", isAuthenticated, async (req, res) => {
 
 // Upload Story Image
 app.post("/api/upload-story-image", isAuthenticated, async (req, res) => {
-    // ... [Logic is identical to save-story image upload, kept for backward compatibility if needed]
     const userId = req.session.userId;
     const { storyId, base64Image, fileExtension } = req.body;
 
@@ -737,7 +740,7 @@ app.get("/api/story/:storyId", isAuthenticated, (req, res) => {
     );
 });
 
-// Like/Unlike/Comment logic (Standard SQLite implementations)
+// Like/Unlike/Comment logic
 app.post("/api/like/:storyId", isAuthenticated, (req, res) => {
     const storyId = req.params.storyId;
     const userId = req.session.userId;
@@ -848,16 +851,21 @@ app.get("/api/all-stories", isAuthenticated, async (req, res) => {
     const offset = (page - 1) * limit;
     const userId = req.session.userId;
     
-    // Simplistic pagination for example
     taskDB.all(`SELECT ps.*, u.fullName as authorName, (SELECT COUNT(*) FROM likes WHERE storyId=ps.id) as likesCount FROM published_stories ps JOIN users_db.users u ON ps.userId = u.id WHERE ps.status='published' AND ps.userId != ? ORDER BY ps.timestamp DESC LIMIT ? OFFSET ?`, [userId, limit, offset], (err, rows) => {
         res.json({stories: rows, hasMore: rows.length === limit});
     });
 });
 
-// Static Files
+// Static Files & Routing
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/home.html", isAuthenticated, (req, res) => res.sendFile(path.join(__dirname, "pages", "home.html")));
-app.get("/pages/*", isAuthenticated, (req, res) => res.sendFile(path.join(__dirname, "pages", req.params[0]))); // Generic handler
+
+// === FIX: Use Native Regex to handle wildcards in Express 5 ===
+app.get(/\/pages\/(.*)/, isAuthenticated, (req, res) => {
+    // req.params[0] contains the matched path from the regex capture group (.*)
+    res.sendFile(path.join(__dirname, "pages", req.params[0]));
+});
+
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use("/pages", express.static(path.join(__dirname, "pages")));
 app.use(express.static(__dirname));
